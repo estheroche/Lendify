@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LendBit-Zero MVP Demo</title>
+    <script src="https://cdn.ethers.io/lib/ethers-5.7.2.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #333;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+        
+        .asset-card, .loan-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .asset-card h4, .loan-card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        
+        .asset-status, .loan-status {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .verified {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .unverified {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .locked {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .active {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        .repaid {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .liquidated {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .demo-section {
+            margin-top: 40px;
+            padding-top: 40px;
+            border-top: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .demo-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 LendBit-Zero MVP</h1>
+            <p>Real-World Asset Backed DeFi Lending</p>
+        </div>
+        
+        <div id="status-message" class="status hidden"></div>
+        
+        <!-- Wallet Connection -->
+        <div class="card">
+            <h2>🔗 Wallet Connection</h2>
+            <div id="wallet-status">
+                <button id="connect-wallet" class="btn">Connect Wallet</button>
+                <p id="wallet-address"></p>
+            </div>
+        </div>
+        
+        <!-- Demo Simulations -->
+        <div class="card">
+            <h2>🎯 Quick Demo Simulations</h2>
+            <p>Experience all 5 core scenarios with one click:</p>
+            <div class="demo-buttons">
+                <button id="demo-real-estate" class="btn btn-secondary">🏠 Real Estate Loan</button>
+                <button id="demo-bond" class="btn btn-secondary">💼 Bond Collateral</button>
+                <button id="demo-invoice" class="btn btn-secondary">📄 Invoice Financing</button>
+                <button id="demo-liquidation" class="btn btn-secondary">⚠️ Liquidation Event</button>
+                <button id="demo-portfolio" class="btn btn-secondary">🏗️ Multi-Asset Portfolio</button>
+            </div>
+            <div id="demo-output" class="status info hidden">
+                <h4>Demo Output:</h4>
+                <div id="demo-log"></div>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <!-- Tokenize Asset -->
+            <div class="card">
+                <h2>🏠 Tokenize RWA</h2>
+                <div class="form-group">
+                    <label>Asset Type:</label>
+                    <select id="asset-type">
+                        <option value="0">Real Estate</option>
+                        <option value="1">Corporate Bond</option>
+                        <option value="2">Invoice</option>
+                        <option value="3">Commodity</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Asset Value (ETH):</label>
+                    <input type="number" id="asset-value" placeholder="1.0" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Metadata URI:</label>
+                    <input type="text" id="metadata-uri" placeholder="ipfs://Qm...">
+                </div>
+                <button id="tokenize-btn" class="btn">Tokenize Asset</button>
+            </div>
+            
+            <!-- Create Loan -->
+            <div class="card">
+                <h2>💰 Request Loan</h2>
+                <div class="form-group">
+                    <label>Collateral Token ID:</label>
+                    <input type="number" id="collateral-id" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label>Loan Amount (ETH):</label>
+                    <input type="number" id="loan-amount" placeholder="0.8" step="0.01">
+                </div>
+                <div class="form-group">
+                    <label>Interest Rate (%):</label>
+                    <input type="number" id="interest-rate" placeholder="5.0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Duration (Days):</label>
+                    <input type="number" id="duration" placeholder="365">
+                </div>
+                <button id="loan-request-btn" class="btn">Request Loan</button>
+            </div>
+        </div>
+        
+        <div class="grid">
+            <!-- Fund Loan -->
+            <div class="card">
+                <h2>🤝 Fund Loan</h2>
+                <div class="form-group">
+                    <label>Loan ID:</label>
+                    <input type="number" id="fund-loan-id" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label>Funding Amount (ETH):</label>
+                    <input type="number" id="fund-amount" placeholder="0.8" step="0.01">
+                </div>
+                <button id="fund-loan-btn" class="btn">Fund Loan</button>
+            </div>
+            
+            <!-- Repay Loan -->
+            <div class="card">
+                <h2>💸 Repay Loan</h2>
+                <div class="form-group">
+                    <label>Loan ID:</label>
+                    <input type="number" id="repay-loan-id" placeholder="1">
+                </div>
+                <button id="calculate-owed-btn" class="btn btn-secondary">Calculate Amount Owed</button>
+                <div id="amount-owed"></div>
+                <button id="repay-loan-btn" class="btn">Repay Loan</button>
+            </div>
+        </div>
+        
+        <!-- My Assets & Loans -->
+        <div class="card">
+            <h2>📋 My Assets & Loans</h2>
+            <button id="refresh-data-btn" class="btn btn-secondary">Refresh Data</button>
+            
+            <div style="margin-top: 20px;">
+                <h3>My RWA Assets:</h3>
+                <div id="my-assets">
+                    <p>Connect wallet and refresh to see your assets</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <h3>My Loans:</h3>
+                <div id="my-loans">
+                    <p>Connect wallet and refresh to see your loans</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Admin Functions -->
+        <div class="card">
+            <h2>⚙️ Admin Functions</h2>
+            <div class="form-group">
+                <label>Token ID to Verify:</label>
+                <input type="number" id="verify-token-id" placeholder="1">
+            </div>
+            <button id="verify-asset-btn" class="btn">Verify Asset</button>
+            
+            <div style="margin-top: 20px;">
+                <div class="form-group">
+                    <label>Token ID:</label>
+                    <input type="number" id="price-token-id" placeholder="1">
+                </div>
+                <div class="form-group">
+                    <label>New Price (ETH):</label>
+                    <input type="number" id="new-price" placeholder="0.9" step="0.01">
+                </div>
+                <button id="update-price-btn" class="btn">Update Price</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="app.js"></script>
+</body>
+</html>

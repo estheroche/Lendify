@@ -1,0 +1,22 @@
+{
+  "name": "lendbit-zero-mvp",
+  "version": "1.0.0",
+  "description": "Simplified RWA-backed DeFi lending MVP",
+  "main": "index.js",
+  "scripts": {
+    "test": "hardhat test",
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/deploy.js",
+    "node": "hardhat node"
+  },
+  "keywords": ["defi", "lending", "rwa", "nft", "blockchain"],
+  "author": "LendBit Zero Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "hardhat": "^2.19.0"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts": "^5.0.1"
+  }
+}
