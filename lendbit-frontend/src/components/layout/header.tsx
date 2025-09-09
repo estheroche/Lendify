@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { useAccount } from 'wagmi'
 import { Building, Menu, X, TrendingUp, Shield, BarChart3, Zap } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { WalletConnect } from '@/components/wallet/wallet-connect'
+import { ThirdwebStyleModal } from '@/components/wallet/thirdweb-style-modal'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface HeaderProps {
@@ -81,7 +81,7 @@ export function Header({ protocolTVL }: HeaderProps) {
             transition={{ duration: 0.5, delay: 0.3 }}
             className="hidden sm:block"
           >
-            <WalletConnect showDisconnect={true} showNetworkInfo={false} />
+            <ThirdwebStyleModal />
           </motion.div>
 
           {/* Mobile Menu Toggle */}
@@ -124,8 +124,8 @@ export function Header({ protocolTVL }: HeaderProps) {
               </div>
 
               {/* Mobile Wallet Connection */}
-              <div className="sm:hidden">
-                <WalletConnect showDisconnect={true} showNetworkInfo={false} />
+              <div className="sm:hidden w-full">
+                <ThirdwebStyleModal />
               </div>
             </div>
           </motion.div>

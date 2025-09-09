@@ -15,7 +15,7 @@ import { SomniaPerformance } from '@/components/dashboard/somnia-performance'
 import { RealTimeMetrics } from '@/components/dashboard/real-time-metrics'
 import { DemoSimulator } from '@/components/demo/demo-simulator'
 import { HeroSection } from '@/components/landing/hero-section'
-import { WalletConnect } from '@/components/wallet/wallet-connect'
+import { ThirdwebStyleModal } from '@/components/wallet/thirdweb-style-modal'
 import { formatEther } from 'viem'
 import { formatCurrency } from '@/lib/utils'
 import { EnhancedProtocolStats } from '@/lib/contract-config'
@@ -177,9 +177,11 @@ export default function HomePage() {
                 <div className="max-w-md mx-auto">
                   <div className="text-center mb-8">
                     <h2 className="text-3xl font-bold text-white mb-4">Ready to Start?</h2>
-                    <p className="text-gray-300">Connect your wallet to access Somnia's ultra-fast RWA lending</p>
+                    <p className="text-gray-300">Connect your wallet to access Somnia&apos;s ultra-fast RWA lending</p>
                   </div>
-                  <WalletConnect size="xl" showNetworkInfo={true} />
+                  <div className="flex justify-center">
+                    <ThirdwebStyleModal size="xl" />
+                  </div>
                 </div>
               </div>
             </div>
