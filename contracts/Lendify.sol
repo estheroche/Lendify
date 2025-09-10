@@ -1,3 +1,4 @@
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.20;
 
@@ -6,11 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-/**
- * @title LendBitZero - Simplified RWA-backed Lending MVP
- * @dev Combines RWA tokenization with lending in one contract for maximum simplicity
- */
-contract LendBitZero is ERC721, Ownable, ReentrancyGuard {
+contract Lendify is ERC721, Ownable, ReentrancyGuard {
     
     // ============================================================================
     // STRUCTS & ENUMS
@@ -113,7 +110,7 @@ contract LendBitZero is ERC721, Ownable, ReentrancyGuard {
     }
     
     /**
-     * @dev Verify an asset (only authorized verifiers)
+     * @dev Verify an asset (only authorized verifiers, say deployer)
      */
     function verifyAsset(uint256 _tokenId) external {
         require(authorizedVerifiers[msg.sender], "Not authorized verifier");
