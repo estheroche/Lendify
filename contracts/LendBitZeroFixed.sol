@@ -6,12 +6,7 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
-/**
- * @title LendBitZero - Working RWA-backed DeFi Lending MVP
- * @dev Based on analysis of COiTON and xLendBit protocols
- * This is a SIMPLIFIED but FUNCTIONAL implementation that actually works
- */
-contract LendBitZeroFixed is ERC721, Ownable, ReentrancyGuard {
+contract LendifyFixed is ERC721, Ownable, ReentrancyGuard {
     
     // ============================================================================
     // STRUCTS & ENUMS (Based on real implementations)
