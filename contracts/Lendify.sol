@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
+// contract address 0x2c85A2efb30eE0dd4895BA9E599fcCc89B1ec704
+
 contract Lendify is ERC721, Ownable, ReentrancyGuard {
     
     // ============================================================================
