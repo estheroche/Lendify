@@ -100,10 +100,10 @@ export function RealTimeMetrics() {
             >
               <div className="flex items-center justify-between mb-2">
                 <Zap className="w-5 h-5 text-green-400" />
-                <Badge className="bg-green-500/20 text-green-300 text-xs">LIVE</Badge>
+                <Badge className="bg-green-500/20 text-green-700 text-xs">LIVE</Badge>
               </div>
               <div className="text-xl font-bold text-white">{metrics.currentTPS.toLocaleString()}</div>
-              <div className="text-sm text-gray-400">Current TPS</div>
+              <div className="text-sm text-gray-600">Current TPS</div>
             </motion.div>
 
             <motion.div
@@ -114,10 +114,10 @@ export function RealTimeMetrics() {
             >
               <div className="flex items-center justify-between mb-2">
                 <Clock className="w-5 h-5 text-blue-400" />
-                <Badge className="bg-blue-500/20 text-blue-300 text-xs">SUB-SEC</Badge>
+                <Badge className="bg-blue-500/20 text-blue-700 text-xs">SUB-SEC</Badge>
               </div>
               <div className="text-xl font-bold text-white">{metrics.avgBlockTime.toFixed(2)}s</div>
-              <div className="text-sm text-gray-400">Block Time</div>
+              <div className="text-sm text-gray-600">Block Time</div>
             </motion.div>
 
             <motion.div
@@ -134,14 +134,14 @@ export function RealTimeMetrics() {
                 <Target className="w-5 h-5 text-purple-400" />
                 <Badge className={
                   metrics.queuedTransactions === 0
-                    ? "bg-green-500/20 text-green-300 text-xs"
-                    : "bg-yellow-500/20 text-yellow-300 text-xs"
+                    ? "bg-green-500/20 text-green-700 text-xs"
+                    : "bg-yellow-500/20 text-yellow-700 text-xs"
                 }>
                   {metrics.queuedTransactions === 0 ? 'INSTANT' : 'QUEUE'}
                 </Badge>
               </div>
               <div className="text-xl font-bold text-white">{metrics.queuedTransactions}</div>
-              <div className="text-sm text-gray-400">Queue Depth</div>
+              <div className="text-sm text-gray-600">Queue Depth</div>
             </motion.div>
 
             <motion.div
@@ -152,10 +152,10 @@ export function RealTimeMetrics() {
             >
               <div className="flex items-center justify-between mb-2">
                 <Cpu className="w-5 h-5 text-purple-400" />
-                <Badge className="bg-purple-500/20 text-purple-300 text-xs">UTIL</Badge>
+                <Badge className="bg-purple-500/20 text-purple-700 text-xs">UTIL</Badge>
               </div>
               <div className="text-xl font-bold text-white">{metrics.networkUtilization.toFixed(1)}%</div>
-              <div className="text-sm text-gray-400">Network Load</div>
+              <div className="text-sm text-gray-600">Network Load</div>
             </motion.div>
           </div>
 
@@ -163,15 +163,15 @@ export function RealTimeMetrics() {
           <div className="grid grid-cols-3 gap-4 mt-4">
             <div className="text-center p-3 rounded-lg bg-white/5">
               <div className="text-lg font-bold text-white">{metrics.peakTPS.toLocaleString()}</div>
-              <div className="text-xs text-gray-400">Peak TPS (24h)</div>
+              <div className="text-xs text-gray-600">Peak TPS (24h)</div>
             </div>
             <div className="text-center p-3 rounded-lg bg-white/5">
               <div className="text-lg font-bold text-white">{metrics.activeNodes}</div>
-              <div className="text-xs text-gray-400">Active Nodes</div>
+              <div className="text-xs text-gray-600">Active Nodes</div>
             </div>
             <div className="text-center p-3 rounded-lg bg-white/5">
               <div className="text-lg font-bold text-white">{metrics.totalTransactions.toLocaleString()}</div>
-              <div className="text-xs text-gray-400">Total Tx</div>
+              <div className="text-xs text-gray-600">Total Tx</div>
             </div>
           </div>
         </CardContent>
@@ -201,14 +201,14 @@ export function RealTimeMetrics() {
                     <span className="text-lg">{getTransactionIcon(tx.type)}</span>
                     <div>
                       <div className="text-sm font-medium text-white">{tx.type}</div>
-                      <div className="text-xs text-gray-400">{formatTime(tx.timestamp)}</div>
+                      <div className="text-xs text-gray-600">{formatTime(tx.timestamp)}</div>
                     </div>
                   </div>
                   <div className="text-right">
                     <div className="text-sm font-bold text-green-400">
                       {tx.value.toFixed(3)} STT
                     </div>
-                    <Badge className="bg-green-500/20 text-green-300 text-xs mt-1">
+                    <Badge className="bg-green-500/20 text-green-700 text-xs mt-1">
                       CONFIRMED
                     </Badge>
                   </div>

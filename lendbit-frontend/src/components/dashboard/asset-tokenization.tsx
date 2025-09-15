@@ -116,7 +116,7 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
                 </option>
               ))}
             </Select>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-600 font-medium">
               Select the type of real-world asset you want to tokenize
             </p>
           </div>
@@ -139,7 +139,7 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
                 {errors.value}
               </p>
             )}
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-600 font-medium">
               Current market value of your asset in ETH
             </p>
           </div>
@@ -161,7 +161,7 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
                 {errors.description}
               </p>
             )}
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-600 font-medium">
               Provide detailed information about your asset ({formData.description.length}/500)
             </p>
           </div>
@@ -185,7 +185,7 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
                 {errors.location}
               </p>
             )}
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-600 font-medium">
               Physical location or jurisdiction of the asset
             </p>
           </div>
@@ -208,7 +208,7 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
                   value={formData.metadataURI}
                   onChange={(e) => setFormData({ ...formData, metadataURI: e.target.value })}
                 />
-                <p className="text-xs text-gray-400">
+                <p className="text-xs text-gray-600 font-medium">
                   Link to asset documentation, images, or legal documents
                 </p>
               </div>

@@ -20,6 +20,13 @@ import { formatEther } from 'viem'
 import { formatCurrency } from '@/lib/utils'
 import { EnhancedProtocolStats } from '@/lib/contract-config'
 import { Card, CardContent } from '@/components/ui/card'
+import { 
+  BarChart3, 
+  Building2, 
+  Zap, 
+  Target,
+  Loader2
+} from 'lucide-react'
 
 // Enhanced mock protocol stats with Somnia-specific metrics
 const mockEnhancedStats: EnhancedProtocolStats = {
@@ -141,169 +148,145 @@ export default function HomePage() {
 
   // Mock user assets for loan requests
   const mockUserAssets = [
-    { tokenId: 1, name: '🏠 Manhattan Property', value: 2500000, type: 'Real Estate' },
-    { tokenId: 2, name: '💼 Apple Inc. Bond', value: 500000, type: 'Corporate Bond' },
-    { tokenId: 4, name: '🥇 Gold Bullion Vault', value: 200000, type: 'Commodity' }
+    { tokenId: 1, name: 'Manhattan Commercial Property', value: 2500000, type: 'Real Estate' },
+    { tokenId: 2, name: 'Apple Inc. Corporate Bond', value: 500000, type: 'Corporate Bond' },
+    { tokenId: 4, name: 'Gold Bullion Reserve', value: 200000, type: 'Commodity' }
   ]
 
   const protocolTVL = protocolStats ? 
     formatCurrency(parseFloat(formatEther(protocolStats.totalValueLocked))) : 
     undefined
 
+  const navigationSections = [
+    { id: 'dashboard', label: 'Dashboard', icon: Building2 },
+    { id: 'analytics', label: 'Analytics', icon: BarChart3 },
+    { id: 'performance', label: 'Performance', icon: Zap },
+    { id: 'demo', label: 'Demo', icon: Target }
+  ]
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Animated Background */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -inset-10 opacity-50">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-          <div className="absolute bottom-1/4 left-1/2 w-96 h-96 bg-green-500/10 rounded-full blur-3xl animate-pulse delay-2000" />
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50">
+      <Header protocolTVL={protocolTVL} />
 
-      <div className="relative">
-        <Header
-          protocolTVL={protocolTVL}
-        />
+      <main className="pt-8">
+        {/* Hero Section for Non-Connected Users */}
+        {!isConnected && (
+          <HeroSection onWatchDemo={handleWatchDemo} />
+        )}
 
-        <main>
-          {/* Hero Section for Non-Connected Users */}
-          {!isConnected && (
-            <div className="space-y-16">
-              <HeroSection onWatchDemo={handleWatchDemo} />
-              
-              {/* Wallet Connection Section */}
-              <div className="container mx-auto px-6 py-16">
-                <div className="max-w-md mx-auto">
-                  <div className="text-center mb-8">
-                    <h2 className="text-3xl font-bold text-white mb-4">Ready to Start?</h2>
-                    <p className="text-gray-300">Connect your wallet to access Somnia&apos;s ultra-fast RWA lending</p>
-                  </div>
-                  <div className="flex justify-center">
-                    <ThirdwebStyleModal size="xl" />
-                  </div>
-                </div>
+        {/* Connected User Dashboard */}
+        {isConnected && (
+          <div className="professional-container py-8">
+            {/* Protocol Stats */}
+            <div className="mb-12">
+              <ProtocolStats stats={protocolStats} isLoading={false} />
+            </div>
+
+            {/* Section Navigation */}
+            <div className="flex justify-center mb-8">
+              <div className="inline-flex bg-white border border-gray-200 rounded-lg p-1 shadow-sm">
+                {navigationSections.map((section) => (
+                  <button
+                    key={section.id}
+                    onClick={() => setActiveSection(section.id as 'dashboard' | 'analytics' | 'demo' | 'performance')}
+                    className={`flex items-center space-x-2 px-6 py-3 rounded-md text-sm font-medium transition-all ${
+                      activeSection === section.id
+                        ? 'bg-blue-600 text-white shadow-sm'
+                        : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                    }`}
+                  >
+                    <section.icon className="w-4 h-4" />
+                    <span>{section.label}</span>
+                  </button>
+                ))}
               </div>
             </div>
-          )}
 
-          {/* Connected User Dashboard */}
-          {isConnected && (
-            <div className="container mx-auto px-6 py-8">
-              {/* Protocol Stats */}
-              <ProtocolStats stats={protocolStats} isLoading={false} />
-
-              {/* Section Navigation */}
-              <div className="flex justify-center mb-8">
-                <div className="flex space-x-1 bg-white/5 rounded-lg p-1">
-                  {[
-                    { id: 'dashboard', label: 'Dashboard', icon: '🏠' },
-                    { id: 'analytics', label: 'Analytics', icon: '📊' },
-                    { id: 'performance', label: 'Somnia Performance', icon: '⚡' },
-                    { id: 'demo', label: 'Demo', icon: '🎯' }
-                  ].map((section) => (
-                    <button
-                      key={section.id}
-                      onClick={() => setActiveSection(section.id as 'dashboard' | 'analytics' | 'demo' | 'performance')}
-                      className={`flex items-center space-x-2 px-6 py-3 rounded-lg text-sm font-medium transition-all ${
-                        activeSection === section.id
-                          ? 'bg-white/10 text-white shadow-lg'
-                          : 'text-gray-400 hover:text-white'
-                      }`}
-                    >
-                      <span>{section.icon}</span>
-                      <span>{section.label}</span>
-                    </button>
-                  ))}
+            {/* Transaction Status */}
+            {isLoading && (
+              <div className="mb-8">
+                <div className="professional-card p-6 border-l-4 border-l-blue-500">
+                  <div className="flex items-center space-x-3">
+                    <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
+                    <div>
+                      <p className="font-medium text-gray-900">Processing Transaction...</p>
+                      <p className="text-sm text-gray-600">
+                        Please wait while we process your transaction on Somnia Network
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </div>
+            )}
 
-              {/* Transaction Status */}
-              {isLoading && (
-                <Card className="bg-blue-500/10 border-blue-500/20 mb-8">
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-6 h-6 border-2 border-blue-400/20 border-t-blue-400 rounded-full animate-spin" />
-                      <div>
-                        <p className="font-medium text-white">Processing Transaction...</p>
-                        <p className="text-sm text-gray-400">
-                          Please wait while we process your transaction on Arbitrum
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+            {/* Content Based on Active Section */}
+            <motion.div
+              key={activeSection}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              {activeSection === 'dashboard' && (
+                <div className="space-y-12">
+                  {/* Real-time Metrics - Showcase Somnia's Speed */}
+                  <RealTimeMetrics />
+
+                  {/* Asset Portfolio */}
+                  <AssetPortfolio
+                    assets={[]}
+                    isLoading={false}
+                    onRefresh={handleRefreshPortfolio}
+                  />
+
+                  {/* Health Monitor */}
+                  <HealthMonitor
+                    loans={[]}
+                    isLoading={false}
+                    onRefresh={handleRefreshPortfolio}
+                  />
+
+                  {/* Main Actions Grid */}
+                  <div className="professional-grid professional-grid-3">
+                    <AssetTokenization
+                      onTokenize={handleTokenizeAsset}
+                      isLoading={isLoading}
+                      isConnected={isConnected}
+                    />
+
+                    <LoanRequest
+                      onRequestLoan={handleLoanRequest}
+                      isLoading={isLoading}
+                      isConnected={isConnected}
+                      userAssets={mockUserAssets}
+                    />
+
+                    <LenderDashboard
+                      onFundLoan={handleFundLoan}
+                      isLoading={isLoading}
+                      isConnected={isConnected}
+                    />
+                  </div>
+                </div>
               )}
 
-              {/* Content Based on Active Section */}
-              <motion.div
-                key={activeSection}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                {activeSection === 'dashboard' && (
-                  <div className="space-y-8">
-                    {/* Real-time Metrics - Showcase Somnia's Speed */}
-                    <RealTimeMetrics />
+              {activeSection === 'analytics' && (
+                <AnalyticsDashboard />
+              )}
 
-                    {/* Asset Portfolio */}
-                    <AssetPortfolio
-                      assets={[]}
-                      isLoading={false}
-                      onRefresh={handleRefreshPortfolio}
-                    />
+              {activeSection === 'performance' && (
+                <SomniaPerformance 
+                  metrics={realtimeMetrics} 
+                  networkStats={networkStats} 
+                />
+              )}
 
-                    {/* Health Monitor */}
-                    <HealthMonitor
-                      loans={[]}
-                      isLoading={false}
-                      onRefresh={handleRefreshPortfolio}
-                    />
-
-                    {/* Main Actions Grid */}
-                    <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-                      <AssetTokenization
-                        onTokenize={handleTokenizeAsset}
-                        isLoading={isLoading}
-                        isConnected={isConnected}
-                      />
-
-                      <LoanRequest
-                        onRequestLoan={handleLoanRequest}
-                        isLoading={isLoading}
-                        isConnected={isConnected}
-                        userAssets={mockUserAssets}
-                      />
-
-                      <LenderDashboard
-                        onFundLoan={handleFundLoan}
-                        isLoading={isLoading}
-                        isConnected={isConnected}
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {activeSection === 'analytics' && (
-                  <AnalyticsDashboard />
-                )}
-
-                {activeSection === 'performance' && (
-                  <SomniaPerformance 
-                    metrics={realtimeMetrics} 
-                    networkStats={networkStats} 
-                  />
-                )}
-
-                {activeSection === 'demo' && (
-                  <DemoSimulator />
-                )}
-              </motion.div>
-            </div>
-          )}
-        </main>
-      </div>
+              {activeSection === 'demo' && (
+                <DemoSimulator />
+              )}
+            </motion.div>
+          </div>
+        )}
+      </main>
     </div>
   )
 }

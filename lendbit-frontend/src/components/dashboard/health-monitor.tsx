@@ -78,7 +78,7 @@ export function HealthMonitor({ loans, isLoading, onRefresh, onLiquidate }: Heal
       case 'safe': return 'text-green-400'
       case 'warning': return 'text-yellow-400'
       case 'danger': return 'text-red-400'
-      default: return 'text-gray-400'
+      default: return 'text-gray-600'
     }
   }
 
@@ -146,19 +146,19 @@ export function HealthMonitor({ loans, isLoading, onRefresh, onLiquidate }: Heal
         <div className="grid grid-cols-4 gap-4">
           <div className="text-center p-3 bg-white/5 rounded-lg">
             <p className="text-2xl font-bold text-white">{displayLoans.length}</p>
-            <p className="text-xs text-gray-400">Total Loans</p>
+            <p className="text-xs text-gray-600">Total Loans</p>
           </div>
           <div className="text-center p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
             <p className="text-2xl font-bold text-green-400">{safeLoans.length}</p>
-            <p className="text-xs text-gray-400">Safe</p>
+            <p className="text-xs text-gray-600">Safe</p>
           </div>
           <div className="text-center p-3 bg-yellow-500/20 border border-yellow-500/30 rounded-lg">
             <p className="text-2xl font-bold text-yellow-400">{warningLoans.length}</p>
-            <p className="text-xs text-gray-400">At Risk</p>
+            <p className="text-xs text-gray-600">At Risk</p>
           </div>
           <div className="text-center p-3 bg-red-500/20 border border-red-500/30 rounded-lg">
             <p className="text-2xl font-bold text-red-400">{dangerLoans.length}</p>
-            <p className="text-xs text-gray-400">Liquidatable</p>
+            <p className="text-xs text-gray-600">Liquidatable</p>
           </div>
         </div>
 
@@ -175,7 +175,7 @@ export function HealthMonitor({ loans, isLoading, onRefresh, onLiquidate }: Heal
                 <p className="font-semibold text-red-300">
                   {dangerLoans.length} loan{dangerLoans.length > 1 ? 's' : ''} eligible for liquidation
                 </p>
-                <p className="text-sm text-red-400/80">
+                <p className="text-sm text-red-600">
                   Immediate action required to prevent losses
                 </p>
               </div>
@@ -196,8 +196,8 @@ export function HealthMonitor({ loans, isLoading, onRefresh, onLiquidate }: Heal
 
           {displayLoans.length === 0 ? (
             <div className="text-center py-8">
-              <Activity className="w-12 h-12 text-gray-400 mx-auto mb-3 opacity-50" />
-              <p className="text-gray-400">No active loans to monitor</p>
+              <Activity className="w-12 h-12 text-gray-600 mx-auto mb-3 opacity-50" />
+              <p className="text-gray-600">No active loans to monitor</p>
             </div>
           ) : (
             <div className="space-y-3 max-h-[500px] overflow-y-auto">
@@ -228,11 +228,11 @@ export function HealthMonitor({ loans, isLoading, onRefresh, onLiquidate }: Heal
                               </div>
                             </div>
                           </div>
-                          <p className="text-xs text-gray-400 mt-1">{loan.borrower}</p>
+                          <p className="text-xs text-gray-600 mt-1">{loan.borrower}</p>
                         </div>
                         
                         <div className="text-right">
-                          <p className="text-xs text-gray-400">Last Update</p>
+                          <p className="text-xs text-gray-600">Last Update</p>
                           <p className="text-xs text-white">{getTimeAgo(loan.lastUpdate)}</p>
                         </div>
                       </div>
@@ -240,7 +240,7 @@ export function HealthMonitor({ loans, isLoading, onRefresh, onLiquidate }: Heal
                       {/* Health Factor Display */}
                       <div className="mb-4">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm text-gray-300">Health Factor</span>
+                          <span className="text-sm text-gray-600">Health Factor</span>
                           <span className={`text-xl font-bold ${getHealthFactorColor(loan.healthFactor)}`}>
                             {formatPercentage(loan.healthFactor)}
                           </span>
@@ -265,7 +265,7 @@ export function HealthMonitor({ loans, isLoading, onRefresh, onLiquidate }: Heal
                             style={{ left: `${(loan.liquidationThreshold / 200) * 100}%` }}
                           />
                         </div>
-                        <div className="flex justify-between text-xs text-gray-400 mt-1">
+                        <div className="flex justify-between text-xs text-gray-600 mt-1">
                           <span>0%</span>
                           <span className="text-red-400">Liquidation: {formatPercentage(loan.liquidationThreshold)}</span>
                           <span>200%</span>
@@ -275,14 +275,14 @@ export function HealthMonitor({ loans, isLoading, onRefresh, onLiquidate }: Heal
                       {/* Loan Details */}
                       <div className="grid grid-cols-2 gap-4 mb-3 text-sm">
                         <div>
-                          <p className="text-gray-400">Collateral Asset</p>
+                          <p className="text-gray-600">Collateral Asset</p>
                           <p className="text-white font-medium">{loan.collateralAsset}</p>
                           <p className="text-green-400 text-xs">{formatCurrency(loan.collateralValue)}</p>
                         </div>
                         <div>
-                          <p className="text-gray-400">Loan Amount</p>
+                          <p className="text-gray-600">Loan Amount</p>
                           <p className="text-white font-medium">{formatCurrency(loan.loanAmount)}</p>
-                          <p className="text-gray-400 text-xs">
+                          <p className="text-gray-600 text-xs">
                             LTV: {formatPercentage((loan.loanAmount / loan.collateralValue) * 100)}
                           </p>
                         </div>
@@ -291,7 +291,7 @@ export function HealthMonitor({ loans, isLoading, onRefresh, onLiquidate }: Heal
                       {/* Time to Liquidation */}
                       {loan.timeToLiquidation && (
                         <div className="mb-3 p-2 bg-white/5 rounded border border-white/10">
-                          <p className="text-xs text-gray-400">Time to Liquidation</p>
+                          <p className="text-xs text-gray-600">Time to Liquidation</p>
                           <p className={`text-sm font-medium ${
                             loan.riskLevel === 'danger' ? 'text-red-400' : 'text-yellow-400'
                           }`}>
@@ -329,9 +329,9 @@ export function HealthMonitor({ loans, isLoading, onRefresh, onLiquidate }: Heal
         <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
           <div className="flex items-start space-x-2">
             <Shield className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-            <div className="text-xs text-blue-300">
+            <div className="text-xs text-blue-700">
               <p className="font-medium mb-1">Health Factor Guide:</p>
-              <ul className="space-y-1 text-blue-300/80">
+              <ul className="space-y-1 text-blue-700">
                 <li>• <span className="text-green-400">150%+</span>: Safe - Low liquidation risk</li>
                 <li>• <span className="text-yellow-400">120-149%</span>: Caution - Monitor closely</li>
                 <li>• <span className="text-red-400">Below 110%</span>: Danger - Eligible for liquidation</li>

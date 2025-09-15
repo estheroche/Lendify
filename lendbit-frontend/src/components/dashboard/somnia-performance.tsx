@@ -102,7 +102,7 @@ export function SomniaPerformance({ metrics, networkStats }: SomniaPerformancePr
               <Zap className="w-7 h-7 mr-3 text-yellow-400" />
               Somnia Ultra-High Performance
             </CardTitle>
-            <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
+            <Badge className="bg-green-500/20 text-green-700 border-green-500/30">
               LIVE
             </Badge>
           </div>
@@ -122,7 +122,7 @@ export function SomniaPerformance({ metrics, networkStats }: SomniaPerformancePr
                   <span className="text-xs text-green-400 font-medium">{metric.change}</span>
                 </div>
                 <div className="text-2xl font-bold text-white mb-1">{metric.value}</div>
-                <div className="text-sm text-gray-400">{metric.label}</div>
+                <div className="text-sm text-gray-600">{metric.label}</div>
               </motion.div>
             ))}
           </div>
@@ -155,17 +155,17 @@ export function SomniaPerformance({ metrics, networkStats }: SomniaPerformancePr
                   <div className="flex items-center">
                     <h3 className="text-lg font-semibold text-white">{network.name}</h3>
                     {network.name === 'Somnia' && (
-                      <Badge className="ml-2 bg-green-500/20 text-green-300 border-green-500/30">
+                      <Badge className="ml-2 bg-green-500/20 text-green-700 border-green-500/30">
                         ULTRA-FAST
                       </Badge>
                     )}
                   </div>
-                  <span className="text-sm text-gray-400">Chain ID: {network.chainId}</span>
+                  <span className="text-sm text-gray-600">Chain ID: {network.chainId}</span>
                 </div>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                   <div>
-                    <div className="text-sm text-gray-400 mb-1">TPS</div>
+                    <div className="text-sm text-gray-600 mb-1">TPS</div>
                     <div className={`text-lg font-bold ${
                       network.name === 'Somnia' ? 'text-green-400' : 'text-white'
                     }`}>
@@ -173,7 +173,7 @@ export function SomniaPerformance({ metrics, networkStats }: SomniaPerformancePr
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400 mb-1">Block Time</div>
+                    <div className="text-sm text-gray-600 mb-1">Block Time</div>
                     <div className={`text-lg font-bold ${
                       network.name === 'Somnia' ? 'text-green-400' : 'text-white'
                     }`}>
@@ -181,15 +181,15 @@ export function SomniaPerformance({ metrics, networkStats }: SomniaPerformancePr
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400 mb-1">Finality</div>
+                    <div className="text-sm text-gray-600 mb-1">Finality</div>
                     <div className={`text-sm font-medium ${
-                      network.name === 'Somnia' ? 'text-green-400' : 'text-gray-300'
+                      network.name === 'Somnia' ? 'text-green-400' : 'text-gray-600'
                     }`}>
                       {network.finality}
                     </div>
                   </div>
                   <div>
-                    <div className="text-sm text-gray-400 mb-1">Gas Efficiency</div>
+                    <div className="text-sm text-gray-600 mb-1">Gas Efficiency</div>
                     <div className={`text-lg font-bold ${
                       network.name === 'Somnia' ? 'text-green-400' : 'text-white'
                     }`}>
@@ -201,8 +201,8 @@ export function SomniaPerformance({ metrics, networkStats }: SomniaPerformancePr
                 {/* Performance Bar */}
                 <div className="mb-4">
                   <div className="flex justify-between text-sm mb-2">
-                    <span className="text-gray-400">Performance Score</span>
-                    <span className="text-gray-300">
+                    <span className="text-gray-600">Performance Score</span>
+                    <span className="text-gray-600">
                       {network.name === 'Somnia' ? '98/100' : 
                        network.name === 'Arbitrum' ? '78/100' :
                        network.name === 'Polygon' ? '72/100' : '65/100'}
@@ -223,8 +223,8 @@ export function SomniaPerformance({ metrics, networkStats }: SomniaPerformancePr
                       variant="outline"
                       className={`text-xs ${
                         network.name === 'Somnia'
-                          ? 'border-blue-500/30 text-blue-300'
-                          : 'border-gray-600 text-gray-400'
+                          ? 'border-blue-500/30 text-blue-700'
+                          : 'border-gray-600 text-gray-600'
                       }`}
                     >
                       {feature}
@@ -250,7 +250,7 @@ export function SomniaPerformance({ metrics, networkStats }: SomniaPerformancePr
             <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
               <Zap className="w-8 h-8 text-blue-400 mb-3" />
               <h3 className="font-semibold text-white mb-2">Instant Asset Tokenization</h3>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-600">
                 Tokenize real estate, bonds, and commodities in under 0.4 seconds with sub-second finality.
               </p>
             </div>
@@ -258,7 +258,7 @@ export function SomniaPerformance({ metrics, networkStats }: SomniaPerformancePr
             <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
               <Clock className="w-8 h-8 text-green-400 mb-3" />
               <h3 className="font-semibold text-white mb-2">Real-time Health Monitoring</h3>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-600">
                 Monitor loan health factors and liquidation risks with millisecond precision updates.
               </p>
             </div>
@@ -266,7 +266,7 @@ export function SomniaPerformance({ metrics, networkStats }: SomniaPerformancePr
             <div className="p-4 rounded-lg bg-purple-500/10 border border-purple-500/20">
               <Users className="w-8 h-8 text-purple-400 mb-3" />
               <h3 className="font-semibold text-white mb-2">Community-driven Verification</h3>
-              <p className="text-sm text-gray-400">
+              <p className="text-sm text-gray-600">
                 Leverage community verification with instant consensus and reputation scoring.
               </p>
             </div>

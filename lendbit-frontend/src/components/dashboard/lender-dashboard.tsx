@@ -150,7 +150,7 @@ export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableR
               <TrendingUp className="w-4 h-4 mr-2" />
               Available Opportunities
             </span>
-            <span className="text-sm text-gray-400">{requests.length} active</span>
+            <span className="text-sm text-gray-600">{requests.length} active</span>
           </h3>
 
           {!isConnected ? (
@@ -178,7 +178,7 @@ export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableR
                           </span>
                         </div>
                       </div>
-                      <p className="text-xs text-gray-400 mt-1">{request.borrower}</p>
+                      <p className="text-xs text-gray-600 mt-1">{request.borrower}</p>
                     </div>
                     
                     <Button
@@ -193,17 +193,17 @@ export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableR
                   {/* Main Info */}
                   <div className="grid grid-cols-2 gap-4 mb-3">
                     <div>
-                      <p className="text-xs text-gray-400">Loan Amount</p>
+                      <p className="text-xs text-gray-600">Loan Amount</p>
                       <p className="text-lg font-bold text-white">{formatCurrency(request.requestedAmount)}</p>
                     </div>
                     <div>
-                      <p className="text-xs text-gray-400">Interest Rate</p>
+                      <p className="text-xs text-gray-600">Interest Rate</p>
                       <p className="text-lg font-bold text-green-400">{formatPercentage(request.interestRate)}</p>
                     </div>
                   </div>
 
                   {/* Quick Stats */}
-                  <div className="flex items-center space-x-4 text-xs text-gray-300 mb-3">
+                  <div className="flex items-center space-x-4 text-xs text-gray-600 mb-3">
                     <span className="flex items-center">
                       <Clock className="w-3 h-3 mr-1" />
                       {request.duration} days
@@ -220,7 +220,7 @@ export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableR
 
                   {/* Collateral */}
                   <div className="p-2 bg-white/5 rounded border border-white/10 mb-3">
-                    <p className="text-xs text-gray-400">Collateral</p>
+                    <p className="text-xs text-gray-600">Collateral</p>
                     <p className="text-sm font-medium text-white">{request.collateralAsset}</p>
                     <p className="text-xs text-green-400">{formatCurrency(request.collateralValue)} value</p>
                   </div>
@@ -234,19 +234,19 @@ export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableR
                       className="space-y-3 pt-3 border-t border-white/10"
                     >
                       <div>
-                        <p className="text-xs text-gray-400 mb-1">Loan Purpose</p>
+                        <p className="text-xs text-gray-600 mb-1">Loan Purpose</p>
                         <p className="text-sm text-white">{request.purpose}</p>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4 text-sm">
                         <div>
-                          <p className="text-xs text-gray-400">Potential Profit</p>
+                          <p className="text-xs text-gray-600">Potential Profit</p>
                           <p className="text-sm font-bold text-green-400">
                             {formatCurrency((request.requestedAmount * request.interestRate * request.duration) / (365 * 100))}
                           </p>
                         </div>
                         <div>
-                          <p className="text-xs text-gray-400">Risk Level</p>
+                          <p className="text-xs text-gray-600">Risk Level</p>
                           <p className={`text-sm font-bold ${getHealthScoreColor(request.healthScore)}`}>
                             {request.healthScore >= 80 ? 'Low' : request.healthScore >= 60 ? 'Medium' : 'High'}
                           </p>
@@ -289,15 +289,15 @@ export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableR
           <div className="grid grid-cols-3 gap-4 text-center">
             <div>
               <p className="text-lg font-bold text-white">$0</p>
-              <p className="text-xs text-gray-400">Total Lent</p>
+              <p className="text-xs text-gray-600">Total Lent</p>
             </div>
             <div>
               <p className="text-lg font-bold text-green-400">0%</p>
-              <p className="text-xs text-gray-400">Avg APY</p>
+              <p className="text-xs text-gray-600">Avg APY</p>
             </div>
             <div>
               <p className="text-lg font-bold text-white">0</p>
-              <p className="text-xs text-gray-400">Active Loans</p>
+              <p className="text-xs text-gray-600">Active Loans</p>
             </div>
           </div>
         </div>
@@ -306,9 +306,9 @@ export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableR
         <div className="p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
           <div className="flex items-start space-x-2">
             <AlertCircle className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-            <div className="text-xs text-blue-300">
+            <div className="text-xs text-blue-700">
               <p className="font-medium mb-1">Lending Tips:</p>
-              <ul className="space-y-1 text-blue-300/80">
+              <ul className="space-y-1 text-blue-700">
                 <li>• Diversify across multiple loans to reduce risk</li>
                 <li>• Higher health scores indicate safer investments</li>
                 <li>• Short-term loans often have higher APY</li>

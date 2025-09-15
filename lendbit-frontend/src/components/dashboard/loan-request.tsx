@@ -185,11 +185,11 @@ export function LoanRequest({ onRequestLoan, isLoading, isConnected, userAssets 
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-medium text-white">{selectedAsset.name}</p>
-                    <p className="text-xs text-gray-400">{selectedAsset.type}</p>
+                    <p className="text-xs text-gray-600">{selectedAsset.type}</p>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-white">{formatCurrency(selectedAsset.value)}</p>
-                    <p className="text-xs text-gray-400">Asset Value</p>
+                    <p className="text-xs text-gray-600">Asset Value</p>
                   </div>
                 </div>
               </div>
@@ -201,7 +201,7 @@ export function LoanRequest({ onRequestLoan, isLoading, isConnected, userAssets 
             <div className="flex items-center justify-between">
               <Label htmlFor="loan-amount">Loan Amount (ETH)</Label>
               {selectedAsset && (
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-gray-600">
                   Max: {formatCurrency(calculations.maxLoanAmount)} (80% LTV)
                 </span>
               )}
@@ -226,7 +226,7 @@ export function LoanRequest({ onRequestLoan, isLoading, isConnected, userAssets 
             {selectedAsset && formData.amount && (
               <div className={`p-2 rounded-lg ${getLTVBgColor(calculations.ltvRatio)}`}>
                 <div className="flex items-center justify-between">
-                  <span className="text-xs text-gray-300">LTV Ratio</span>
+                  <span className="text-xs text-gray-600">LTV Ratio</span>
                   <span className={`text-sm font-bold ${getLTVColor(calculations.ltvRatio)}`}>
                     {formatPercentage(calculations.ltvRatio)}
                   </span>
@@ -311,19 +311,19 @@ export function LoanRequest({ onRequestLoan, isLoading, isConnected, userAssets 
               
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div>
-                  <p className="text-gray-400">Monthly Payment</p>
+                  <p className="text-gray-600">Monthly Payment</p>
                   <p className="font-bold text-white">{formatCurrency(calculations.monthlyPayment)}</p>
                 </div>
                 <div>
-                  <p className="text-gray-400">Total Interest</p>
+                  <p className="text-gray-600">Total Interest</p>
                   <p className="font-bold text-white">{formatCurrency(calculations.totalInterest)}</p>
                 </div>
                 <div>
-                  <p className="text-gray-400">Total Repayment</p>
+                  <p className="text-gray-600">Total Repayment</p>
                   <p className="font-bold text-white">{formatCurrency(calculations.totalRepayment)}</p>
                 </div>
                 <div>
-                  <p className="text-gray-400">APY</p>
+                  <p className="text-gray-600">APY</p>
                   <p className="font-bold text-green-400">{formData.interestRate}%</p>
                 </div>
               </div>
@@ -362,14 +362,14 @@ export function LoanRequest({ onRequestLoan, isLoading, isConnected, userAssets 
 
             {userAssets.length === 0 && isConnected && (
               <div className="p-4 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                <p className="text-sm text-blue-300 flex items-center">
+                <p className="text-sm text-blue-700 flex items-center">
                   <Info className="w-4 h-4 mr-2" />
                   You need to tokenize assets first before requesting loans
                 </p>
               </div>
             )}
 
-            <div className="text-xs text-center text-gray-400 space-y-1">
+            <div className="text-xs text-center text-gray-600 space-y-1">
               <p className="flex items-center justify-center">
                 <Shield className="w-3 h-3 mr-1" />
                 Secured by smart contracts on Arbitrum

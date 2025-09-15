@@ -91,7 +91,7 @@ export function AnalyticsDashboard({ timeframe = '30d', onTimeframeChange }: Ana
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-bold text-white">Analytics Dashboard</h2>
-          <p className="text-gray-400">Comprehensive protocol insights and metrics</p>
+          <p className="text-gray-600">Comprehensive protocol insights and metrics</p>
         </div>
         
         <div className="flex items-center space-x-3">
@@ -126,7 +126,7 @@ export function AnalyticsDashboard({ timeframe = '30d', onTimeframeChange }: Ana
               <CardContent className="p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-gray-400">{kpi.label}</p>
+                    <p className="text-sm text-gray-600">{kpi.label}</p>
                     <p className="text-2xl font-bold text-white">{kpi.value}</p>
                   </div>
                   <span className={`text-sm font-medium ${kpi.positive ? 'text-green-400' : 'text-red-400'}`}>
@@ -150,7 +150,7 @@ export function AnalyticsDashboard({ timeframe = '30d', onTimeframeChange }: Ana
               className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-white/10 text-white shadow-lg'
-                  : 'text-gray-400 hover:text-white'
+                  : 'text-gray-600 hover:text-white'
               }`}
             >
               <Icon className="w-4 h-4" />
@@ -296,7 +296,7 @@ export function AnalyticsDashboard({ timeframe = '30d', onTimeframeChange }: Ana
                   ].map((metric, index) => (
                     <div key={metric.label} className="space-y-2">
                       <div className="flex justify-between">
-                        <span className="text-sm text-gray-400">{metric.label}</span>
+                        <span className="text-sm text-gray-600">{metric.label}</span>
                         <span className="text-lg font-semibold text-white">{metric.value}</span>
                       </div>
                       {metric.target && (
@@ -342,7 +342,7 @@ export function AnalyticsDashboard({ timeframe = '30d', onTimeframeChange }: Ana
                     <p className="text-3xl font-bold mb-2" style={{ color: asset.color }}>
                       {asset.value}%
                     </p>
-                    <p className="text-gray-400">{formatCurrency(asset.amount)}</p>
+                    <p className="text-gray-600">{formatCurrency(asset.amount)}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -365,7 +365,7 @@ export function AnalyticsDashboard({ timeframe = '30d', onTimeframeChange }: Ana
                   {riskMetrics.map((risk, index) => (
                     <div key={risk.name}>
                       <div className="flex justify-between mb-2">
-                        <span className="text-sm text-gray-400">{risk.name}</span>
+                        <span className="text-sm text-gray-600">{risk.name}</span>
                         <span className="text-sm text-white">{risk.count} loans</span>
                       </div>
                       <div className="w-full bg-white/10 rounded-full h-3">
@@ -394,17 +394,17 @@ export function AnalyticsDashboard({ timeframe = '30d', onTimeframeChange }: Ana
                 <div className="space-y-6">
                   <div className="text-center p-4 bg-green-500/20 border border-green-500/30 rounded-lg">
                     <p className="text-2xl font-bold text-green-400">99.2%</p>
-                    <p className="text-sm text-gray-400">Portfolio Health</p>
+                    <p className="text-sm text-gray-600">Portfolio Health</p>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-3 bg-white/5 rounded-lg">
                       <p className="text-xl font-bold text-white">2.1 days</p>
-                      <p className="text-xs text-gray-400">Avg Liquidation Time</p>
+                      <p className="text-xs text-gray-600">Avg Liquidation Time</p>
                     </div>
                     <div className="text-center p-3 bg-white/5 rounded-lg">
                       <p className="text-xl font-bold text-white">$50K</p>
-                      <p className="text-xs text-gray-400">Insurance Pool</p>
+                      <p className="text-xs text-gray-600">Insurance Pool</p>
                     </div>
                   </div>
                 </div>

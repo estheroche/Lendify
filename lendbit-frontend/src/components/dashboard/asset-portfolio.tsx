@@ -95,7 +95,7 @@ export function AssetPortfolio({ assets, isLoading, onRefresh }: AssetPortfolioP
   const availableValue = totalPortfolioValue - lockedValue
 
   const getHealthFactorColor = (healthFactor?: number) => {
-    if (!healthFactor) return 'text-gray-400'
+    if (!healthFactor) return 'text-gray-600'
     if (healthFactor >= 150) return 'text-green-400'
     if (healthFactor >= 120) return 'text-yellow-400'
     return 'text-red-400'
@@ -154,24 +154,24 @@ export function AssetPortfolio({ assets, isLoading, onRefresh }: AssetPortfolioP
         <div className="grid grid-cols-3 gap-4 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg border border-blue-500/20">
           <div className="text-center">
             <p className="text-2xl font-bold text-white">{formatCurrency(totalPortfolioValue)}</p>
-            <p className="text-sm text-gray-400">Total Value</p>
+            <p className="text-sm text-gray-600">Total Value</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-green-400">{formatCurrency(availableValue)}</p>
-            <p className="text-sm text-gray-400">Available</p>
+            <p className="text-sm text-gray-600">Available</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-yellow-400">{formatCurrency(lockedValue)}</p>
-            <p className="text-sm text-gray-400">Locked</p>
+            <p className="text-sm text-gray-600">Locked</p>
           </div>
         </div>
 
         {/* Assets Grid */}
         {displayAssets.length === 0 ? (
           <div className="text-center py-12">
-            <Building className="w-16 h-16 text-gray-400 mx-auto mb-4 opacity-50" />
+            <Building className="w-16 h-16 text-gray-600 mx-auto mb-4 opacity-50" />
             <h3 className="text-lg font-semibold text-white mb-2">No Assets Found</h3>
-            <p className="text-gray-400 mb-6">Start by tokenizing your first real-world asset</p>
+            <p className="text-gray-600 mb-6">Start by tokenizing your first real-world asset</p>
             <Button>Tokenize Asset</Button>
           </div>
         ) : (
@@ -198,7 +198,7 @@ export function AssetPortfolio({ assets, isLoading, onRefresh }: AssetPortfolioP
                           </div>
                           <div>
                             <h3 className="font-semibold text-white text-sm">{asset.name}</h3>
-                            <p className="text-xs text-gray-400">#{asset.tokenId}</p>
+                            <p className="text-xs text-gray-600">#{asset.tokenId}</p>
                           </div>
                         </div>
                         
@@ -234,20 +234,20 @@ export function AssetPortfolio({ assets, isLoading, onRefresh }: AssetPortfolioP
                             +2.5%
                           </span>
                         </div>
-                        <p className="text-xs text-gray-400">Last updated {getDaysAgo(asset.lastValuation)}</p>
+                        <p className="text-xs text-gray-600">Last updated {getDaysAgo(asset.lastValuation)}</p>
                       </div>
 
                       {/* Description */}
-                      <p className="text-sm text-gray-300 mb-3 line-clamp-2">{asset.description}</p>
+                      <p className="text-sm text-gray-600 mb-3 line-clamp-2">{asset.description}</p>
                       
                       {/* Location */}
-                      <p className="text-xs text-gray-400 mb-3">{asset.location}</p>
+                      <p className="text-xs text-gray-600 mb-3">{asset.location}</p>
 
                       {/* Loan Info (if collateral) */}
                       {asset.isLocked && asset.loanAmount && (
                         <div className={`p-3 rounded-lg border mb-3 ${getHealthFactorBg(asset.healthFactor)}`}>
                           <div className="flex justify-between items-center mb-2">
-                            <span className="text-xs text-gray-300">Active Loan</span>
+                            <span className="text-xs text-gray-600">Active Loan</span>
                             {asset.healthFactor && (
                               <span className={`text-xs font-bold ${getHealthFactorColor(asset.healthFactor)}`}>
                                 Health: {formatPercentage(asset.healthFactor)}
@@ -255,7 +255,7 @@ export function AssetPortfolio({ assets, isLoading, onRefresh }: AssetPortfolioP
                             )}
                           </div>
                           <p className="text-sm font-semibold text-white">{formatCurrency(asset.loanAmount)}</p>
-                          <p className="text-xs text-gray-400">
+                          <p className="text-xs text-gray-600">
                             LTV: {formatPercentage((asset.loanAmount / asset.currentValue) * 100)}
                           </p>
                         </div>

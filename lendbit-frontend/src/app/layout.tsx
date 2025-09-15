@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Web3Provider } from "@/components/providers/web3-provider";
 import "./globals.css";
+import "../styles/design-system.css";
 
 export const metadata: Metadata = {
   title: "Lendify - Ultra-Fast RWA Lending on Somnia",
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 export const viewport = {
   width: 'device-width',
   initialScale: 1,
-  themeColor: '#3B82F6',
+  themeColor: '#2563eb',
 };
 
 export default function RootLayout({
@@ -31,9 +32,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body
-        className="font-sans antialiased bg-slate-900 text-white"
+        className="font-sans antialiased bg-gray-50 text-gray-900"
       >
         <Web3Provider>
           {children}

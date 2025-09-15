@@ -128,15 +128,15 @@ export function CommunityVerification() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
               <div className="text-3xl font-bold text-white mb-2">47</div>
-              <div className="text-sm text-gray-400">Total Verifications</div>
+              <div className="text-sm text-gray-600">Total Verifications</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-green-400 mb-2">89%</div>
-              <div className="text-sm text-gray-400">Approval Rate</div>
+              <div className="text-sm text-gray-600">Approval Rate</div>
             </div>
             <div className="text-center">
               <div className="text-3xl font-bold text-purple-400 mb-2">15</div>
-              <div className="text-sm text-gray-400">Active Verifiers</div>
+              <div className="text-sm text-gray-600">Active Verifiers</div>
             </div>
           </div>
         </CardContent>
@@ -169,7 +169,7 @@ export function CommunityVerification() {
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <h3 className="font-semibold text-white">{asset.name}</h3>
-                      <p className="text-sm text-gray-400">{asset.type} • ${asset.value.toLocaleString()}</p>
+                      <p className="text-sm text-gray-600">{asset.type} • ${asset.value.toLocaleString()}</p>
                     </div>
                     <Badge className={getScoreBg(asset.verificationScore)}>
                       {asset.verificationScore}/100
@@ -177,7 +177,7 @@ export function CommunityVerification() {
                   </div>
                   
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-4 text-sm text-gray-400">
+                    <div className="flex items-center space-x-4 text-sm text-gray-600">
                       <span className="flex items-center">
                         <MessageSquare className="w-4 h-4 mr-1" />
                         {asset.verificationCount} reviews
@@ -186,7 +186,7 @@ export function CommunityVerification() {
                     </div>
                     
                     {selectedAsset?.tokenId === asset.tokenId && (
-                      <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30">
+                      <Badge className="bg-blue-500/20 text-blue-700 border-blue-500/30">
                         Selected
                       </Badge>
                     )}
@@ -212,21 +212,21 @@ export function CommunityVerification() {
                   <h3 className="font-semibold text-white mb-2">{selectedAsset.name}</h3>
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div>
-                      <span className="text-gray-400">Type:</span>
+                      <span className="text-gray-600">Type:</span>
                       <span className="text-white ml-2">{selectedAsset.type}</span>
                     </div>
                     <div>
-                      <span className="text-gray-400">Value:</span>
+                      <span className="text-gray-600">Value:</span>
                       <span className="text-white ml-2">${selectedAsset.value.toLocaleString()}</span>
                     </div>
                     <div>
-                      <span className="text-gray-400">Score:</span>
+                      <span className="text-gray-600">Score:</span>
                       <span className={`ml-2 font-semibold ${getScoreColor(selectedAsset.verificationScore)}`}>
                         {selectedAsset.verificationScore}/100
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-400">Reviews:</span>
+                      <span className="text-gray-600">Reviews:</span>
                       <span className="text-white ml-2">{selectedAsset.verificationCount}</span>
                     </div>
                   </div>
@@ -238,14 +238,14 @@ export function CommunityVerification() {
                   {selectedAsset.verifiers.map((verifier, index) => (
                     <div key={index} className="p-3 rounded-lg bg-white/5 border border-gray-700">
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm text-gray-400">{verifier.address}</span>
+                        <span className="text-sm text-gray-600">{verifier.address}</span>
                         {verifier.approved ? (
                           <CheckCircle className="w-4 h-4 text-green-400" />
                         ) : (
                           <XCircle className="w-4 h-4 text-red-400" />
                         )}
                       </div>
-                      <p className="text-sm text-gray-300">{verifier.notes}</p>
+                      <p className="text-sm text-gray-600">{verifier.notes}</p>
                     </div>
                   ))}
                 </div>
@@ -282,7 +282,7 @@ export function CommunityVerification() {
                       onClick={() => handleSubmitVerification(false)}
                       disabled={isSubmitting || !verificationNotes.trim()}
                       variant="outline"
-                      className="flex-1 border-red-500/30 text-red-300 hover:bg-red-500/10"
+                      className="flex-1 border-red-500/30 text-red-700 hover:bg-red-500/10"
                     >
                       {isSubmitting ? (
                         <div className="w-4 h-4 border-2 border-red-300/20 border-t-red-300 rounded-full animate-spin mr-2" />
@@ -297,7 +297,7 @@ export function CommunityVerification() {
             ) : (
               <div className="text-center py-12">
                 <Users className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-400 mb-2">Select an Asset</h3>
+                <h3 className="text-lg font-semibold text-gray-600 mb-2">Select an Asset</h3>
                 <p className="text-gray-500">Choose an asset from the list to begin verification</p>
               </div>
             )}
