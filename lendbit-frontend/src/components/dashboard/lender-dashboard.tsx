@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,12 +8,11 @@ import { Label } from '@/components/ui/label'
 import { motion } from 'framer-motion'
 import { Users, DollarSign, TrendingUp, Clock, Shield, AlertCircle, CheckCircle, Eye } from 'lucide-react'
 import { formatCurrency, formatPercentage } from '@/lib/utils'
+import { useFundLoan, useGetLoan, useWatchLoanFunded, useGetConstants } from '@/hooks/useLendifyContract'
+import { formatEther } from 'viem'
 
 interface LenderDashboardProps {
-  onFundLoan: (requestId: string) => Promise<void>
-  isLoading: boolean
   isConnected: boolean
-  availableRequests?: LoanRequest[]
 }
 
 interface LoanRequest {
@@ -29,12 +28,39 @@ interface LoanRequest {
   healthScore: number
 }
 
-export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableRequests = [] }: LenderDashboardProps) {
+export function LenderDashboard({ isConnected }: LenderDashboardProps) {
+  const { fundLoan, isPending, isSuccess, error } = useFundLoan()
+  const { liquidationThreshold, ltvRatio } = useGetConstants()
+  
   const [fundRequestId, setFundRequestId] = useState('')
+  const [fundAmount, setFundAmount] = useState('')
   const [selectedRequest, setSelectedRequest] = useState<LoanRequest | null>(null)
   const [showDetails, setShowDetails] = useState<Record<number, boolean>>({})
 
-  // Mock loan requests for demo
+  // Watch for successful loan funding
+  useWatchLoanFunded((log) => {
+    alert(`Loan funded successfully! Loan ID: ${log.args.loanId}`)
+    console.log('Loan funded:', log)
+  })
+
+  // Handle success/error states
+  useEffect(() => {
+    if (isSuccess) {
+      alert('Loan funding transaction submitted!')
+      console.log('Loan funding transaction submitted successfully')
+      setFundRequestId('')
+      setFundAmount('')
+    }
+  }, [isSuccess])
+
+  useEffect(() => {
+    if (error) {
+      alert(`Loan funding failed: ${error.message}`)
+      console.error('Loan funding error:', error)
+    }
+  }, [error])
+
+  // Mock loan requests for demo (in real implementation, fetch from contract)
   const mockRequests: LoanRequest[] = [
     {
       requestId: 1,
@@ -74,12 +100,29 @@ export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableR
     }
   ]
 
-  const requests = availableRequests.length > 0 ? availableRequests : mockRequests
+  const requests = mockRequests // In real implementation, fetch from contract
 
   const handleFundLoan = async (requestId: number) => {
+    if (!fundAmount) {
+      alert('Please enter funding amount')
+      return
+    }
+    
     try {
-      await onFundLoan(requestId.toString())
-      setFundRequestId('')
+      await fundLoan(requestId, fundAmount)
+    } catch (error) {
+      console.error('Funding failed:', error)
+    }
+  }
+
+  const handleQuickFund = async () => {
+    if (!fundRequestId || !fundAmount) {
+      alert('Please enter both loan ID and amount')
+      return
+    }
+    
+    try {
+      await fundLoan(parseInt(fundRequestId), fundAmount)
     } catch (error) {
       console.error('Funding failed:', error)
     }
@@ -127,18 +170,41 @@ export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableR
             Quick Fund
           </h3>
           
-          <div className="flex space-x-2">
-            <Input
-              placeholder="Request ID"
-              value={fundRequestId}
-              onChange={(e) => setFundRequestId(e.target.value)}
-              className="flex-1"
-            />
+          <div className="space-y-2">
+            <div className="flex space-x-2">
+              <Input
+                placeholder="Loan ID"
+                value={fundRequestId}
+                onChange={(e) => setFundRequestId(e.target.value)}
+                className="flex-1"
+              />
+              <Input
+                placeholder="Amount (STT)"
+                value={fundAmount}
+                onChange={(e) => setFundAmount(e.target.value)}
+                className="flex-1"
+                type="number"
+                step="0.01"
+              />
+            </div>
             <Button
-              onClick={() => handleFundLoan(parseInt(fundRequestId))}
-              disabled={!fundRequestId || isLoading || !isConnected}
+              onClick={handleQuickFund}
+              disabled={!fundRequestId || !fundAmount || isPending || !isConnected}
+              className="w-full"
             >
-              {isLoading ? 'Funding...' : 'Fund'}
+              {isPending ? (
+                <div className="flex items-center">
+                  <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
+                  Funding...
+                </div>
+              ) : isSuccess ? (
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Transaction Submitted!
+                </div>
+              ) : (
+                'Fund Loan'
+              )}
             </Button>
           </div>
         </div>
@@ -253,24 +319,38 @@ export function LenderDashboard({ onFundLoan, isLoading, isConnected, availableR
                         </div>
                       </div>
 
-                      <Button
-                        onClick={() => handleFundLoan(request.requestId)}
-                        disabled={isLoading}
-                        className="w-full"
-                        variant="success"
-                      >
-                        {isLoading ? (
-                          <div className="flex items-center">
-                            <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
-                            Funding...
-                          </div>
-                        ) : (
-                          <div className="flex items-center">
-                            <CheckCircle className="w-4 h-4 mr-2" />
-                            Fund This Loan
-                          </div>
-                        )}
-                      </Button>
+                      <div className="space-y-2">
+                        <Input
+                          placeholder="Funding amount (STT)"
+                          value={fundAmount}
+                          onChange={(e) => setFundAmount(e.target.value)}
+                          type="number"
+                          step="0.01"
+                        />
+                        <Button
+                          onClick={() => handleFundLoan(request.requestId)}
+                          disabled={isPending || !fundAmount}
+                          className="w-full"
+                          variant="success"
+                        >
+                          {isPending ? (
+                            <div className="flex items-center">
+                              <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
+                              Funding...
+                            </div>
+                          ) : isSuccess ? (
+                            <div className="flex items-center">
+                              <CheckCircle className="w-4 h-4 mr-2" />
+                              Transaction Submitted!
+                            </div>
+                          ) : (
+                            <div className="flex items-center">
+                              <CheckCircle className="w-4 h-4 mr-2" />
+                              Fund This Loan
+                            </div>
+                          )}
+                        </Button>
+                      </div>
                     </motion.div>
                   )}
                 </motion.div>

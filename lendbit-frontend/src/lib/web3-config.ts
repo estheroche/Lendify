@@ -136,7 +136,7 @@ export const switchToSomnia = async () => {
 
 // Contract configuration for Lendify
 export const LENDIFY_CONTRACT = {
-  address: '0x5FbDB2315678afecb367f032d93F642f64180aa3' as const, // Will be updated after deployment
+  address: '0x2c85A2efb30eE0dd4895BA9E599fcCc89B1ec704' as const, // Deployed on Somnia Dream Testnet
   chainId: somniaTestnet.id,
 } as const
 

@@ -1,50 +1,10 @@
 // Lendify Core contract configuration for Somnia Network
-export const CONTRACT_ADDRESS = '0x5FbDB2315678afecb367f032d93F642f64180aa3' as const // Will be updated after deployment
+export const CONTRACT_ADDRESS = '0x2c85A2efb30eE0dd4895BA9E599fcCc89B1ec704' as const // Deployed on Somnia Dream Testnet
 
-export const LENDIFY_CORE_ABI = [
-  // Enhanced asset tokenization functions
-  'function tokenizeAsset(uint8 _assetType, uint256 _value, string _metadataURI, bool _requestInstantVerification) returns (uint256)',
-  'function submitCommunityVerification(uint256 _assetId, bool _approved, string _notes)',
-  
-  // Enhanced loan functions
-  'function createLoan(uint256 _assetId, uint256 _amount, uint256 _interestRate, uint256 _duration) returns (uint256)',
-  'function fundLoan(uint256 _loanId) payable',
-  'function repayLoan(uint256 _loanId) payable',
-  'function liquidateLoan(uint256 _loanId)',
-  
-  // Real-time calculation functions
-  'function calculateHealthFactor(uint256 _loanId) view returns (uint256)',
-  'function calculateTotalOwed(uint256 _loanId) view returns (uint256)',
-  'function getCurrentAssetValue(uint256 _assetId) view returns (uint256)',
-  'function batchUpdateHealthFactors(uint256[] _loanIds)',
-  
-  // View functions for enhanced data
-  'function getAssetDetails(uint256 _assetId) view returns (uint8, uint256, string, address, bool, uint256, bool)',
-  'function getLoanDetails(uint256 _loanId) view returns (uint256, address, address, uint256, uint256, uint8, uint256, bool)',
-  'function getProtocolStats() view returns (tuple(uint256 totalValueLocked, uint256 totalLoansOriginated, uint256 protocolFeeCollected, uint256 totalAssets, uint256 totalActiveLoans, uint256 instantLoansProcessed, uint256 communityVerifications, uint256 averageHealthFactor))',
-  'function getAssetsByUser(address _user) view returns (uint256[])',
-  'function getLoansByUser(address _user) view returns (uint256[])',
-  
-  // Admin functions
-  'function setAuthorizedVerifier(address _verifier, bool _authorized)',
-  'function updateAssetPriceMultiplier(uint8 _assetType, uint256 _multiplier)',
-  'function setProtocolFeeRate(uint256 _feeRate)',
-  
-  // Standard ERC721 functions
-  'function ownerOf(uint256 tokenId) view returns (address)',
-  'function balanceOf(address owner) view returns (uint256)',
-  'function tokenURI(uint256 tokenId) view returns (string)',
-  
-  // Enhanced events for real-time tracking
-  'event AssetTokenized(uint256 indexed tokenId, address indexed owner, uint8 assetType, uint256 value, uint256 timestamp)',
-  'event LoanCreated(uint256 indexed loanId, uint256 indexed assetId, address indexed borrower, uint256 amount, uint256 timestamp)',
-  'event LoanFunded(uint256 indexed loanId, address indexed lender, uint256 amount, uint256 timestamp)',
-  'event LoanRepaid(uint256 indexed loanId, uint256 amount, uint256 timestamp)',
-  'event LoanLiquidated(uint256 indexed loanId, address indexed liquidator, uint256 timestamp)',
-  'event CommunityVerificationSubmitted(uint256 indexed assetId, address indexed verifier, bool approved, uint256 timestamp)',
-  'event RealtimeHealthUpdate(uint256 indexed loanId, uint256 healthFactor, uint256 timestamp)',
-  'event InstantLoanExecuted(uint256 indexed assetId, uint256 amount, uint256 timestamp)'
-] as const
+// Import the deployed ABI from the contracts folder
+import DEPLOYED_ABI from '../../../contracts/lendify_abi.json'
+
+export const LENDIFY_CORE_ABI = DEPLOYED_ABI
 
 // Somnia Dream Testnet configuration
 export const SOMNIA_CHAIN_CONFIG = {

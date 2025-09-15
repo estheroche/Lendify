@@ -1,0 +1,27 @@
+/* Custom select dropdown styling */
+select option {
+  background-color: #1f2937; /* gray-800 */
+  color: #ffffff;
+  padding: 8px 12px;
+  border: none;
+}
+
+select option:checked {
+  background-color: #3b82f6; /* blue-500 */
+  color: #ffffff;
+}
+
+select option:hover {
+  background-color: #374151; /* gray-700 */
+}
+
+/* Ensure the select dropdown has proper z-index */
+select:focus {
+  z-index: 50;
+}
+
+/* Style for disabled options */
+select option:disabled {
+  color: #6b7280; /* gray-500 */
+  background-color: #374151; /* gray-700 */
+}

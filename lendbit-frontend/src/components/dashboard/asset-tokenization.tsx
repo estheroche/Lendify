@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -8,17 +8,16 @@ import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { motion } from 'framer-motion'
-import { Plus, Upload, MapPin, FileText, Coins, Building, CreditCard, AlertCircle } from 'lucide-react'
-import { ASSET_TYPES } from '@/lib/utils'
+import { Plus, Upload, MapPin, FileText, Coins, Building, CreditCard, AlertCircle, CheckCircle } from 'lucide-react'
+import { useTokenizeAsset, useWatchAssetTokenized } from '@/hooks/useLendifyContract'
+import { AssetType, ASSET_TYPE_LABELS } from '@/lib/contract-config'
 
 interface AssetTokenizationProps {
-  onTokenize: (assetData: AssetFormData) => Promise<void>
-  isLoading: boolean
   isConnected: boolean
 }
 
 export interface AssetFormData {
-  type: number
+  type: AssetType
   value: string
   description: string
   location: string
@@ -26,15 +25,21 @@ export interface AssetFormData {
 }
 
 const assetTypeIcons = {
-  0: Building,
-  1: CreditCard,
-  2: FileText,
-  3: Coins,
+  [AssetType.RealEstate]: Building,
+  [AssetType.CorporateBond]: CreditCard,
+  [AssetType.Invoice]: FileText,
+  [AssetType.Commodity]: Coins,
+  [AssetType.IntellectualProperty]: FileText,
+  [AssetType.Equipment]: Building,
+  [AssetType.Inventory]: Building,
+  [AssetType.Receivables]: CreditCard,
 }
 
-export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetTokenizationProps) {
+export function AssetTokenization({ isConnected }: AssetTokenizationProps) {
+  const { tokenizeAsset, isPending, isSuccess, error } = useTokenizeAsset()
+  
   const [formData, setFormData] = useState<AssetFormData>({
-    type: 0,
+    type: AssetType.RealEstate,
     value: '',
     description: '',
     location: '',
@@ -43,6 +48,36 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
 
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [showAdvanced, setShowAdvanced] = useState(false)
+
+  // Watch for successful tokenization
+  useWatchAssetTokenized((log) => {
+    alert(`Asset tokenized successfully! Token ID: ${log.args.tokenId}`)
+    console.log('Asset tokenized:', log)
+  })
+
+  // Handle success/error states
+  useEffect(() => {
+    if (isSuccess) {
+      alert('Asset tokenization transaction submitted!')
+      console.log('Transaction submitted successfully')
+      // Reset form on success
+      setFormData({
+        type: AssetType.RealEstate,
+        value: '',
+        description: '',
+        location: '',
+        metadataURI: ''
+      })
+      setErrors({})
+    }
+  }, [isSuccess])
+
+  useEffect(() => {
+    if (error) {
+      alert(`Tokenization failed: ${error.message}`)
+      console.error('Tokenization error:', error)
+    }
+  }, [error])
 
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {}
@@ -65,35 +100,44 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
     return Object.keys(newErrors).length === 0
   }
 
+  const createMetadataURI = () => {
+    if (formData.metadataURI) return formData.metadataURI
+    
+    // Create a simple metadata object for IPFS or direct use
+    const metadata = {
+      name: `${ASSET_TYPE_LABELS[formData.type]} Asset`,
+      description: formData.description,
+      location: formData.location,
+      assetType: formData.type,
+      value: formData.value,
+      timestamp: Date.now(),
+    }
+    
+    // For now, we'll use a data URI. In production, this should be uploaded to IPFS
+    return `data:application/json;base64,${btoa(JSON.stringify(metadata))}`
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (!validateForm()) return
 
     try {
-      await onTokenize(formData)
-      // Reset form on success
-      setFormData({
-        type: 0,
-        value: '',
-        description: '',
-        location: '',
-        metadataURI: ''
-      })
-      setErrors({})
+      const metadataURI = createMetadataURI()
+      await tokenizeAsset(formData.type, formData.value, metadataURI)
     } catch (error) {
       console.error('Tokenization failed:', error)
     }
   }
 
-  const getCurrentAssetType = () => ASSET_TYPES[formData.type as keyof typeof ASSET_TYPES]
-  const IconComponent = assetTypeIcons[formData.type as keyof typeof assetTypeIcons]
+  const getCurrentAssetType = () => ASSET_TYPE_LABELS[formData.type]
+  const IconComponent = assetTypeIcons[formData.type]
 
   return (
     <Card className="h-fit">
       <CardHeader>
         <CardTitle className="flex items-center space-x-2">
-          <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${getCurrentAssetType().color}`}>
+          <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-blue-600">
             <IconComponent className="w-4 h-4 text-white" />
           </div>
           <span>Tokenize Asset</span>
@@ -108,11 +152,11 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
             <Select
               id="asset-type"
               value={formData.type.toString()}
-              onChange={(e) => setFormData({ ...formData, type: parseInt(e.target.value) })}
+              onChange={(e) => setFormData({ ...formData, type: parseInt(e.target.value) as AssetType })}
             >
-              {Object.entries(ASSET_TYPES).map(([value, type]) => (
+              {Object.entries(ASSET_TYPE_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
-                  {type.emoji} {type.name}
+                  {label}
                 </option>
               ))}
             </Select>
@@ -123,7 +167,7 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
 
           {/* Asset Value */}
           <div className="space-y-2">
-            <Label htmlFor="asset-value">Asset Value (ETH)</Label>
+            <Label htmlFor="asset-value">Asset Value (STT)</Label>
             <Input
               id="asset-value"
               type="number"
@@ -140,7 +184,7 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
               </p>
             )}
             <p className="text-xs text-gray-600 font-medium">
-              Current market value of your asset in ETH
+              Current market value of your asset in STT (Somnia Token)
             </p>
           </div>
 
@@ -149,7 +193,7 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
             <Label htmlFor="description">Description</Label>
             <Textarea
               id="description"
-              placeholder={`Describe your ${getCurrentAssetType().name.toLowerCase()}...`}
+              placeholder={`Describe your ${getCurrentAssetType().toLowerCase()}...`}
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               className={errors.description ? 'border-red-500' : ''}
@@ -237,25 +281,30 @@ export function AssetTokenization({ onTokenize, isLoading, isConnected }: AssetT
 
             <Button
               type="submit"
-              disabled={!isConnected || isLoading}
+              disabled={!isConnected || isPending}
               className="w-full"
               size="lg"
             >
-              {isLoading ? (
+              {isPending ? (
                 <div className="flex items-center">
                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
                   Tokenizing...
                 </div>
+              ) : isSuccess ? (
+                <div className="flex items-center">
+                  <CheckCircle className="w-4 h-4 mr-2" />
+                  Transaction Submitted!
+                </div>
               ) : (
                 <div className="flex items-center">
                   <Plus className="w-4 h-4 mr-2" />
-                  Tokenize {getCurrentAssetType().name}
+                  Tokenize {getCurrentAssetType()}
                 </div>
               )}
             </Button>
 
             <div className="text-xs text-center text-gray-400">
-              <p>✅ Gas fees optimized for Arbitrum</p>
+              <p>✅ Gas fees optimized for Somnia</p>
               <p>🔒 Your asset will be secured on-chain</p>
               <p>⚡ Instant tokenization with smart contract verification</p>
             </div>
