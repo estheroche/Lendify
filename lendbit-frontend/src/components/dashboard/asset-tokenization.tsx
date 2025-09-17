@@ -14,6 +14,7 @@ import { AssetType, ASSET_TYPE_LABELS } from '@/lib/contract-config'
 
 interface AssetTokenizationProps {
   isConnected: boolean
+  // External props kept for compatibility but not used for core functionality
   onTokenize?: (assetData: AssetFormData) => Promise<void>
   isLoading?: boolean
 }
@@ -37,7 +38,7 @@ const assetTypeIcons = {
   [AssetType.Receivables]: CreditCard,
 }
 
-export function AssetTokenization({ isConnected, onTokenize, isLoading: externalLoading }: AssetTokenizationProps) {
+export function AssetTokenization({ isConnected }: AssetTokenizationProps) {
   const { tokenizeAsset, isPending, isSuccess, error } = useTokenizeAsset()
   
   const [formData, setFormData] = useState<AssetFormData>({
@@ -126,11 +127,8 @@ export function AssetTokenization({ isConnected, onTokenize, isLoading: external
 
     try {
       const metadataURI = createMetadataURI()
-      if (onTokenize) {
-        await onTokenize({ ...formData, metadataURI })
-      } else {
-        await tokenizeAsset(formData.type, formData.value, metadataURI)
-      }
+      // Always use the internal contract hook for real blockchain interaction
+      await tokenizeAsset(formData.type, formData.value, metadataURI)
     } catch (error) {
       console.error('Tokenization failed:', error)
     }
@@ -287,11 +285,11 @@ export function AssetTokenization({ isConnected, onTokenize, isLoading: external
 
             <Button
               type="submit"
-              disabled={!isConnected || isPending || externalLoading}
+              disabled={!isConnected || isPending}
               className="w-full"
               size="lg"
             >
-              {(isPending || externalLoading) ? (
+              {isPending ? (
                 <div className="flex items-center">
                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
                   Tokenizing...
