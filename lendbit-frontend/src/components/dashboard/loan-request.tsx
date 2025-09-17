@@ -8,14 +8,16 @@ import { Label } from '@/components/ui/label'
 import { Select } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 import { motion } from 'framer-motion'
-import { DollarSign, Calculator, Calendar, AlertTriangle, TrendingUp, Shield, Info, CheckCircle } from 'lucide-react'
+import { DollarSign, Calculator, AlertTriangle, TrendingUp, Shield, Info, CheckCircle } from 'lucide-react'
 import { formatCurrency, formatPercentage } from '@/lib/utils'
 import { useCreateLoanRequest, useGetUserAssets, useWatchLoanRequested, useGetConstants } from '@/hooks/useLendifyContract'
-import { formatEther } from 'viem'
 import { useAccount } from 'wagmi'
 
 interface LoanRequestProps {
   isConnected: boolean
+  onRequestLoan?: (loanData: LoanFormData) => Promise<void>
+  isLoading?: boolean
+  userAssets?: Array<{ tokenId: number; name: string; value: number; type: string }>
 }
 
 export interface LoanFormData {
@@ -26,7 +28,7 @@ export interface LoanFormData {
   purpose: string
 }
 
-export function LoanRequest({ isConnected }: LoanRequestProps) {
+export function LoanRequest({ isConnected, onRequestLoan, isLoading: externalLoading, userAssets: externalUserAssets }: LoanRequestProps) {
   const { address } = useAccount()
   const { createLoanRequest, isPending, isSuccess, error } = useCreateLoanRequest()
   const { data: userBalance } = useGetUserAssets(address)
@@ -72,10 +74,11 @@ export function LoanRequest({ isConnected }: LoanRequestProps) {
     }
   }, [error])
 
-  // For now, we'll use mock assets since we need to implement asset fetching
+  // Use external assets if provided, otherwise use internal logic
   useEffect(() => {
-    // This should be replaced with actual asset fetching from the contract
-    if (isConnected && address) {
+    if (externalUserAssets) {
+      setUserAssets(externalUserAssets)
+    } else if (isConnected && address) {
       // For demo purposes, we'll show mock assets
       // In reality, these should come from actual tokenized assets
       setUserAssets([
@@ -85,7 +88,7 @@ export function LoanRequest({ isConnected }: LoanRequestProps) {
     } else {
       setUserAssets([])
     }
-  }, [address, isConnected])
+  }, [address, isConnected, externalUserAssets])
 
   const [calculations, setCalculations] = useState({
     maxLoanAmount: 0,
@@ -96,7 +99,7 @@ export function LoanRequest({ isConnected }: LoanRequestProps) {
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [selectedAsset, setSelectedAsset] = useState<any>(null)
+  const [selectedAsset, setSelectedAsset] = useState<{ tokenId: number; name: string; value: number; type: string } | null>(null)
 
   // Real-time calculations
   useEffect(() => {
@@ -131,7 +134,7 @@ export function LoanRequest({ isConnected }: LoanRequestProps) {
   useEffect(() => {
     if (formData.collateralId && userAssets.length > 0) {
       const asset = userAssets.find(a => a.tokenId.toString() === formData.collateralId)
-      setSelectedAsset(asset)
+      setSelectedAsset(asset || null)
     }
   }, [formData.collateralId, userAssets])
 
@@ -177,15 +180,20 @@ export function LoanRequest({ isConnected }: LoanRequestProps) {
         duration: parseInt(formData.duration)
       })
       
-      await createLoanRequest(
-        parseInt(formData.collateralId),
-        formData.amount,
-        parseFloat(formData.interestRate),
-        parseInt(formData.duration)
-      )
-    } catch (error: any) {
+      if (onRequestLoan) {
+        await onRequestLoan(formData)
+      } else {
+        await createLoanRequest(
+          parseInt(formData.collateralId),
+          formData.amount,
+          parseFloat(formData.interestRate),
+          parseInt(formData.duration)
+        )
+      }
+    } catch (error: unknown) {
       console.error('Loan request failed:', error)
-      alert(`Failed to create loan request: ${error.message || 'Unknown error'}`)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+      alert(`Failed to create loan request: ${errorMessage}`)
     }
   }
 
@@ -402,11 +410,11 @@ export function LoanRequest({ isConnected }: LoanRequestProps) {
 
             <Button
               type="submit"
-              disabled={!isConnected || isPending || userAssets.length === 0}
+              disabled={!isConnected || isPending || externalLoading || userAssets.length === 0}
               className="w-full"
               size="lg"
             >
-              {isPending ? (
+              {(isPending || externalLoading) ? (
                 <div className="flex items-center">
                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
                   Creating Loan Request...
@@ -431,7 +439,7 @@ export function LoanRequest({ isConnected }: LoanRequestProps) {
                   You need to tokenize assets first before requesting loans
                 </p>
                 <p className="text-xs text-blue-600 mt-2">
-                  1. Go to "Tokenize Asset" card → Submit an asset<br/>
+                  1. Go to &quot;Tokenize Asset&quot; card → Submit an asset<br/>
                   2. Wait for transaction confirmation<br/>
                   3. Return here to create loan request using your tokenized asset
                 </p>

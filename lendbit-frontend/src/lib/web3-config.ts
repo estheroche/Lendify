@@ -34,7 +34,7 @@ export const somniaTestnet: Chain = {
   testnet: true,
   fees: {
     baseFeeMultiplier: 1.2,
-    defaultPriorityFee: 1000000000n, // 1 gwei
+    defaultPriorityFee: BigInt(1000000000), // 1 gwei
   }
 } as const
 
@@ -56,9 +56,7 @@ export const wagmiConfig = createConfig({
   transports: {
     [somniaTestnet.id]: http('https://dream-rpc.somnia.network', {
       batch: true,
-      fetchOptions: {
-        timeout: 30000,
-      },
+      fetchOptions: {},
       retryCount: 3,
       retryDelay: 1000,
     }),
@@ -122,9 +120,9 @@ export const switchToSomnia = async () => {
         params: [{ chainId: '0xC478' }], // 50312 in hex
       })
       return true
-    } catch (error: any) {
+    } catch (error: unknown) {
       // This error code indicates that the chain has not been added to MetaMask
-      if (error.code === 4902) {
+      if ((error as { code?: number }).code === 4902) {
         return await addSomniaNetwork()
       }
       console.error('Failed to switch to Somnia network:', error)
@@ -140,14 +138,4 @@ export const LENDIFY_CONTRACT = {
   chainId: somniaTestnet.id,
 } as const
 
-// Type definitions for window.ethereum
-declare global {
-  interface Window {
-    ethereum?: {
-      request: (args: { method: string; params?: any[] }) => Promise<any>
-      on: (event: string, callback: (accounts: string[]) => void) => void
-      removeListener: (event: string, callback: (accounts: string[]) => void) => void
-      isMetaMask?: boolean
-    }
-  }
-}
+// Type definitions for window.ethereum are already defined elsewhere

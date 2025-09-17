@@ -58,17 +58,17 @@ export function WalletConnect({
           setNetworkError('Failed to switch to Somnia network. Please try again.')
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Network switch error:', error)
       
-      if (error.code === 4902) {
+      if ((error as { code?: number }).code === 4902) {
         // Network not added to wallet
         const added = await addSomniaNetwork()
         if (!added) {
           setNetworkError('Please add Somnia network to your wallet manually.')
         }
       } else {
-        setNetworkError(error?.message || 'Failed to switch networks')
+        setNetworkError((error as Error)?.message || 'Failed to switch networks')
       }
     }
   }

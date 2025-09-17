@@ -27,36 +27,36 @@ export function RealTimeActivity() {
   const recentActivity = useRecentActivity()
   const protocolStats = useProtocolStats()
 
-  const formatActivity = (activity: any) => {
+  const formatActivity = (activity: { type: string; [key: string]: unknown }) => {
     switch (activity.type) {
       case 'asset_tokenized':
         return {
           title: 'Asset Tokenized',
-          description: `Token ID #${activity.data.tokenId} by ${activity.data.owner.slice(0, 6)}...${activity.data.owner.slice(-4)}`,
-          value: activity.data.value ? formatEther(activity.data.value) + ' STT' : 'N/A'
+          description: `Token ID #${(activity.data as Record<string, unknown>)?.tokenId || 'N/A'} by ${((activity.data as Record<string, unknown>)?.owner as string)?.slice(0, 6) || 'N/A'}...${((activity.data as Record<string, unknown>)?.owner as string)?.slice(-4) || ''}`,
+          value: (activity.data as Record<string, unknown>)?.value ? formatEther((activity.data as Record<string, unknown>).value as bigint) + ' STT' : 'N/A'
         }
       case 'loan_requested':
         return {
           title: 'Loan Requested',
-          description: `Loan ID #${activity.data.loanId} by ${activity.data.borrower.slice(0, 6)}...${activity.data.borrower.slice(-4)}`,
-          value: activity.data.amount ? formatEther(activity.data.amount) + ' STT' : 'N/A'
+          description: `Loan ID #${(activity.data as Record<string, unknown>)?.loanId || 'N/A'} by ${((activity.data as Record<string, unknown>)?.borrower as string)?.slice(0, 6) || 'N/A'}...${((activity.data as Record<string, unknown>)?.borrower as string)?.slice(-4) || ''}`,
+          value: (activity.data as Record<string, unknown>)?.amount ? formatEther((activity.data as Record<string, unknown>).amount as bigint) + ' STT' : 'N/A'
         }
       case 'loan_funded':
         return {
           title: 'Loan Funded',
-          description: `Loan ID #${activity.data.loanId} by ${activity.data.lender.slice(0, 6)}...${activity.data.lender.slice(-4)}`,
+          description: `Loan ID #${(activity.data as Record<string, unknown>)?.loanId || 'N/A'} by ${((activity.data as Record<string, unknown>)?.lender as string)?.slice(0, 6) || 'N/A'}...${((activity.data as Record<string, unknown>)?.lender as string)?.slice(-4) || ''}`,
           value: 'Funded'
         }
       case 'loan_repaid':
         return {
           title: 'Loan Repaid',
-          description: `Loan ID #${activity.data.loanId}`,
-          value: activity.data.amount ? formatEther(activity.data.amount) + ' STT' : 'N/A'
+          description: `Loan ID #${(activity.data as Record<string, unknown>)?.loanId || 'N/A'}`,
+          value: (activity.data as Record<string, unknown>)?.amount ? formatEther((activity.data as Record<string, unknown>).amount as bigint) + ' STT' : 'N/A'
         }
       case 'asset_liquidated':
         return {
           title: 'Asset Liquidated',
-          description: `Token ID #${activity.data.tokenId} → ${activity.data.newOwner.slice(0, 6)}...${activity.data.newOwner.slice(-4)}`,
+          description: `Token ID #${(activity.data as Record<string, unknown>)?.tokenId || 'N/A'} → ${((activity.data as Record<string, unknown>)?.newOwner as string)?.slice(0, 6) || 'N/A'}...${((activity.data as Record<string, unknown>)?.newOwner as string)?.slice(-4) || ''}`,
           value: 'Liquidated'
         }
       default:

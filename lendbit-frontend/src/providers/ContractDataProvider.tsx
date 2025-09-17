@@ -65,7 +65,7 @@ interface ContractDataContextType {
     id: string
     type: 'asset_tokenized' | 'loan_requested' | 'loan_funded' | 'loan_repaid' | 'asset_liquidated'
     timestamp: number
-    data: any
+    data: Record<string, unknown>
   }>
   
   // Loading states
@@ -91,7 +91,7 @@ export function ContractDataProvider({ children }: { children: ReactNode }) {
     id: string
     type: 'asset_tokenized' | 'loan_requested' | 'loan_funded' | 'loan_repaid' | 'asset_liquidated'
     timestamp: number
-    data: any
+    data: Record<string, unknown>
   }>>([])
   
   const [protocolStats, setProtocolStats] = useState({
@@ -117,7 +117,7 @@ export function ContractDataProvider({ children }: { children: ReactNode }) {
     setRecentActivity(prev => [newActivity, ...prev.slice(0, 19)]) // Keep last 20 activities
     
     // Refresh user assets if it's the current user
-    if (log.args.owner.toLowerCase() === address?.toLowerCase()) {
+    if ((log.args.owner as string)?.toLowerCase() === address?.toLowerCase()) {
       refetchAssets()
     }
   })
@@ -231,8 +231,8 @@ export function ContractDataProvider({ children }: { children: ReactNode }) {
     isLoadingLoans: false,
     
     // Constants
-    liquidationThreshold,
-    ltvRatio,
+    liquidationThreshold: liquidationThreshold as bigint | undefined,
+    ltvRatio: ltvRatio as bigint | undefined,
     
     // Protocol stats
     protocolStats,

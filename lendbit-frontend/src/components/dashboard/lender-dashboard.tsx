@@ -4,15 +4,15 @@ import { useState, useEffect } from 'react'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
 import { motion } from 'framer-motion'
 import { Users, DollarSign, TrendingUp, Clock, Shield, AlertCircle, CheckCircle, Eye } from 'lucide-react'
 import { formatCurrency, formatPercentage } from '@/lib/utils'
-import { useFundLoan, useGetLoan, useWatchLoanFunded, useGetConstants } from '@/hooks/useLendifyContract'
-import { formatEther } from 'viem'
+import { useFundLoan, useWatchLoanFunded, useGetConstants } from '@/hooks/useLendifyContract'
 
 interface LenderDashboardProps {
   isConnected: boolean
+  onFundLoan?: (requestId: string) => Promise<void>
+  isLoading?: boolean
 }
 
 interface LoanRequest {
@@ -28,7 +28,7 @@ interface LoanRequest {
   healthScore: number
 }
 
-export function LenderDashboard({ isConnected }: LenderDashboardProps) {
+export function LenderDashboard({ isConnected, onFundLoan, isLoading: externalLoading }: LenderDashboardProps) {
   const { fundLoan, isPending, isSuccess, error } = useFundLoan()
   const { liquidationThreshold, ltvRatio } = useGetConstants()
   
@@ -109,7 +109,11 @@ export function LenderDashboard({ isConnected }: LenderDashboardProps) {
     }
     
     try {
-      await fundLoan(requestId, fundAmount)
+      if (onFundLoan) {
+        await onFundLoan(requestId.toString())
+      } else {
+        await fundLoan(requestId, fundAmount)
+      }
     } catch (error) {
       console.error('Funding failed:', error)
     }
@@ -122,7 +126,11 @@ export function LenderDashboard({ isConnected }: LenderDashboardProps) {
     }
     
     try {
-      await fundLoan(parseInt(fundRequestId), fundAmount)
+      if (onFundLoan) {
+        await onFundLoan(fundRequestId)
+      } else {
+        await fundLoan(parseInt(fundRequestId), fundAmount)
+      }
     } catch (error) {
       console.error('Funding failed:', error)
     }
@@ -189,10 +197,10 @@ export function LenderDashboard({ isConnected }: LenderDashboardProps) {
             </div>
             <Button
               onClick={handleQuickFund}
-              disabled={!fundRequestId || !fundAmount || isPending || !isConnected}
+              disabled={!fundRequestId || !fundAmount || isPending || externalLoading || !isConnected}
               className="w-full"
             >
-              {isPending ? (
+              {(isPending || externalLoading) ? (
                 <div className="flex items-center">
                   <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
                   Funding...
@@ -329,11 +337,11 @@ export function LenderDashboard({ isConnected }: LenderDashboardProps) {
                         />
                         <Button
                           onClick={() => handleFundLoan(request.requestId)}
-                          disabled={isPending || !fundAmount}
+                          disabled={isPending || externalLoading || !fundAmount}
                           className="w-full"
                           variant="success"
                         >
-                          {isPending ? (
+                          {(isPending || externalLoading) ? (
                             <div className="flex items-center">
                               <div className="w-4 h-4 border-2 border-white/20 border-t-white rounded-full animate-spin mr-2" />
                               Funding...

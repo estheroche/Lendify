@@ -15,11 +15,9 @@ import { SomniaPerformance } from '@/components/dashboard/somnia-performance'
 import { RealTimeMetrics } from '@/components/dashboard/real-time-metrics'
 import { DemoSimulator } from '@/components/demo/demo-simulator'
 import { HeroSection } from '@/components/landing/hero-section'
-import { ThirdwebStyleModal } from '@/components/wallet/thirdweb-style-modal'
 import { formatEther } from 'viem'
 import { formatCurrency } from '@/lib/utils'
 import { EnhancedProtocolStats } from '@/lib/contract-config'
-import { Card, CardContent } from '@/components/ui/card'
 import { 
   BarChart3, 
   Building2, 
@@ -50,7 +48,7 @@ const somniaMetrics = {
 }
 
 export default function HomePage() {
-  const { address, isConnected } = useAccount()
+  const { isConnected } = useAccount()
   const [isLoading, setIsLoading] = useState(false)
   const [protocolStats, setProtocolStats] = useState<EnhancedProtocolStats | null>(null)
   const [activeSection, setActiveSection] = useState<'dashboard' | 'analytics' | 'demo' | 'performance'>('dashboard')

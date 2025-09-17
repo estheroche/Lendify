@@ -1,7 +1,13 @@
 import { useReadContract, useWriteContract, useWatchContractEvent } from 'wagmi'
-import { CONTRACT_ADDRESS, LENDIFY_CORE_ABI, AssetType, LoanStatus } from '@/lib/contract-config'
-import { formatEther, parseEther } from 'viem'
-import { useState, useCallback } from 'react'
+import { CONTRACT_ADDRESS, LENDIFY_CORE_ABI, AssetType } from '@/lib/contract-config'
+import { parseEther } from 'viem'
+import { useCallback } from 'react'
+
+// Type definitions for contract events
+interface ContractEventLog {
+  args: Record<string, unknown>
+  [key: string]: unknown
+}
 
 // Asset tokenization hook
 export function useTokenizeAsset() {
@@ -247,79 +253,79 @@ export function useGetConstants() {
 }
 
 // Watch for contract events
-export function useWatchAssetTokenized(onAssetTokenized?: (log: any) => void) {
+export function useWatchAssetTokenized(onAssetTokenized?: (log: ContractEventLog) => void) {
   useWatchContractEvent({
     address: CONTRACT_ADDRESS,
     abi: LENDIFY_CORE_ABI,
     eventName: 'AssetTokenized',
-    onLogs: onAssetTokenized ? (logs) => logs.forEach(onAssetTokenized) : undefined,
+    onLogs: onAssetTokenized ? (logs) => logs.forEach((log) => onAssetTokenized(log as unknown as ContractEventLog)) : undefined,
   })
 }
 
-export function useWatchLoanRequested(onLoanRequested?: (log: any) => void) {
+export function useWatchLoanRequested(onLoanRequested?: (log: ContractEventLog) => void) {
   useWatchContractEvent({
     address: CONTRACT_ADDRESS,
     abi: LENDIFY_CORE_ABI,
     eventName: 'LoanRequested',
-    onLogs: onLoanRequested ? (logs) => logs.forEach(onLoanRequested) : undefined,
+    onLogs: onLoanRequested ? (logs) => logs.forEach((log) => onLoanRequested(log as unknown as ContractEventLog)) : undefined,
   })
 }
 
-export function useWatchLoanFunded(onLoanFunded?: (log: any) => void) {
+export function useWatchLoanFunded(onLoanFunded?: (log: ContractEventLog) => void) {
   useWatchContractEvent({
     address: CONTRACT_ADDRESS,
     abi: LENDIFY_CORE_ABI,
     eventName: 'LoanFunded',
-    onLogs: onLoanFunded ? (logs) => logs.forEach(onLoanFunded) : undefined,
+    onLogs: onLoanFunded ? (logs) => logs.forEach((log) => onLoanFunded(log as unknown as ContractEventLog)) : undefined,
   })
 }
 
-export function useWatchLoanRepaid(onLoanRepaid?: (log: any) => void) {
+export function useWatchLoanRepaid(onLoanRepaid?: (log: ContractEventLog) => void) {
   useWatchContractEvent({
     address: CONTRACT_ADDRESS,
     abi: LENDIFY_CORE_ABI,
     eventName: 'LoanRepaid',
-    onLogs: onLoanRepaid ? (logs) => logs.forEach(onLoanRepaid) : undefined,
+    onLogs: onLoanRepaid ? (logs) => logs.forEach((log) => onLoanRepaid(log as unknown as ContractEventLog)) : undefined,
   })
 }
 
-export function useWatchAssetLiquidated(onAssetLiquidated?: (log: any) => void) {
+export function useWatchAssetLiquidated(onAssetLiquidated?: (log: ContractEventLog) => void) {
   useWatchContractEvent({
     address: CONTRACT_ADDRESS,
     abi: LENDIFY_CORE_ABI,
     eventName: 'AssetLiquidated',
-    onLogs: onAssetLiquidated ? (logs) => logs.forEach(onAssetLiquidated) : undefined,
+    onLogs: onAssetLiquidated ? (logs) => logs.forEach((log) => onAssetLiquidated(log as unknown as ContractEventLog)) : undefined,
   })
 }
 
 // Utility functions for formatting contract data
-export function formatContractAsset(contractAsset: any) {
+export function formatContractAsset(contractAsset: Record<string, unknown>) {
   if (!contractAsset) return null
   
   return {
     tokenId: Number(contractAsset.tokenId),
     assetType: Number(contractAsset.assetType),
-    owner: contractAsset.owner,
-    currentValue: contractAsset.currentValue,
-    metadataURI: contractAsset.metadataURI,
-    isLocked: contractAsset.isLocked,
-    isVerified: contractAsset.isVerified,
+    owner: contractAsset.owner as string,
+    currentValue: contractAsset.currentValue as bigint,
+    metadataURI: contractAsset.metadataURI as string,
+    isLocked: contractAsset.isLocked as boolean,
+    isVerified: contractAsset.isVerified as boolean,
   }
 }
 
-export function formatContractLoan(contractLoan: any) {
+export function formatContractLoan(contractLoan: Record<string, unknown>) {
   if (!contractLoan) return null
   
   return {
     loanId: Number(contractLoan.loanId),
-    borrower: contractLoan.borrower,
-    lender: contractLoan.lender,
+    borrower: contractLoan.borrower as string,
+    lender: contractLoan.lender as string,
     collateralTokenId: Number(contractLoan.collateralTokenId),
-    principalAmount: contractLoan.principalAmount,
+    principalAmount: contractLoan.principalAmount as bigint,
     interestRate: Number(contractLoan.interestRate),
     duration: Number(contractLoan.duration),
     startTime: Number(contractLoan.startTime),
     status: Number(contractLoan.status),
-    totalRepaid: contractLoan.totalRepaid,
+    totalRepaid: contractLoan.totalRepaid as bigint,
   }
 }

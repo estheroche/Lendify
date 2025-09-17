@@ -51,7 +51,7 @@ export function WalletConnectModal({ size = 'default', variant = 'default', clas
   
   const [copied, setCopied] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedConnector, setSelectedConnector] = useState<any>(null)
+  const [selectedConnector, setSelectedConnector] = useState<ReturnType<typeof useConnect>['connectors'][0] | null>(null)
 
   const isOnSomnia = chainId === somniaTestnet.id
   const needsNetworkSwitch = isConnected && !isOnSomnia
@@ -64,7 +64,7 @@ export function WalletConnectModal({ size = 'default', variant = 'default', clas
     }
   }
 
-  const handleConnect = async (connector: any) => {
+  const handleConnect = async (connector: ReturnType<typeof useConnect>['connectors'][0]) => {
     setSelectedConnector(connector)
     try {
       await connect({ connector })

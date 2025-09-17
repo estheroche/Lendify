@@ -44,7 +44,7 @@ export function ConnectButton() {
     }
   }
 
-  const handleConnect = (connector: any) => {
+  const handleConnect = (connector: ReturnType<typeof useConnect>['connectors'][0]) => {
     connect({ connector })
     setShowConnectors(false)
   }

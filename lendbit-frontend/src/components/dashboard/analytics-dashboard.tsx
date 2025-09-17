@@ -5,9 +5,9 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Select } from '@/components/ui/select'
 import { motion } from 'framer-motion'
-import { BarChart3, TrendingUp, DollarSign, Users, Activity, Calendar, Eye, Download } from 'lucide-react'
+import { BarChart3, TrendingUp, DollarSign, Activity, Download } from 'lucide-react'
 import { formatCurrency, formatPercentage } from '@/lib/utils'
-import { LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
+import { AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts'
 
 interface AnalyticsDashboardProps {
   timeframe?: string
@@ -67,12 +67,12 @@ export function AnalyticsDashboard({ timeframe = '30d', onTimeframeChange }: Ana
     { id: 'risk', label: 'Risk', icon: Activity },
   ]
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ name: string; value: number; color: string }>; label?: string }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-black/90 border border-white/20 rounded-lg p-3 backdrop-blur-md">
           <p className="text-white font-medium">{label}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index: number) => (
             <p key={index} className="text-sm" style={{ color: entry.color }}>
               {entry.name}: {typeof entry.value === 'number' && entry.value > 1000 
                 ? formatCurrency(entry.value) 
@@ -146,7 +146,7 @@ export function AnalyticsDashboard({ timeframe = '30d', onTimeframeChange }: Ana
           return (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
+              onClick={() => setActiveTab(tab.id as 'overview' | 'lending' | 'assets' | 'risk')}
               className={`flex-1 flex items-center justify-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 activeTab === tab.id
                   ? 'bg-white/10 text-white shadow-lg'
@@ -245,7 +245,7 @@ export function AnalyticsDashboard({ timeframe = '30d', onTimeframeChange }: Ana
                       />
                       <Legend 
                         wrapperStyle={{ color: '#fff' }}
-                        formatter={(value, entry) => `${value} (${entry.payload.value}%)`}
+                        formatter={(value, entry) => `${value} (${entry?.payload?.value || 0}%)`}
                       />
                     </PieChart>
                   </ResponsiveContainer>
